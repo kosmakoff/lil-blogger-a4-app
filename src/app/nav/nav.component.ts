@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-declare const $: any;
-// import * as $ from 'jquery';
-// import 'bootstrap';
+import * as $ from 'jquery';
+import 'bootstrap';
+
 
 @Component({
   selector: 'app-nav',
