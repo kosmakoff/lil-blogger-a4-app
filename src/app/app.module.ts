@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AccountModule } from "./account/account.module";
 import { ArticlesModule } from './articles/articles.module';
+import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -23,6 +24,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
   imports: [
     BrowserModule,
     FormsModule,
+    AccountModule,
     ArticlesModule,
     AppRoutingModule
   ],
