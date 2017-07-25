@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { AccountModule } from "./account/account.module";
+import { AccountModule } from './account/account.module';
 import { ArticlesModule } from './articles/articles.module';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -28,7 +28,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     ArticlesModule,
     AppRoutingModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

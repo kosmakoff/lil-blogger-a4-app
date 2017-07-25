@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AboutComponent } from './about/about.component';
 
+import { environment } from '../environments/environment';
+
 const appRoutes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: '', redirectTo: '/articles', pathMatch: 'full' },
@@ -15,7 +17,7 @@ const appRoutes: Routes = [
         RouterModule.forRoot(
             appRoutes,
             {
-                enableTracing: true
+                enableTracing: environment.enableTracing
             }
         )
     ],
