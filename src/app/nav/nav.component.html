@@ -1,24 +1,24 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggleArea" aria-controls="navbarToggleArea" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavBar()">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="#">Little Blogger</a>
+  <a class="navbar-brand" href="#" (click)="false">Little Blogger</a>
   
-  <div class="collapse navbar-collapse" id="navbarToggleArea">
+  <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed">
     <ul class="nav navbar-nav mr-auto">
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/articles" (click)="collapse(); false">Articles</a>
+        <a class="nav-link" routerLink="/articles" (click)="collapseNavBar(); false">Articles</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/about" (click)="collapse(); false">About</a>
+        <a class="nav-link" routerLink="/about" (click)="collapseNavBar(); false">About</a>
       </li>
     </ul>
     <ul class="nav navbar-nav">
       <li *ngIf="!isAuthenticated" class="nav-item">
-        <a class="nav-link" href="#" (click)="login(); collapse(); false">Sign In</a>
+        <a class="nav-link" href="#" (click)="login(); collapseNavBar(); false">Sign In</a>
       </li>
       <li *ngIf="isAuthenticated" class="nav-item">
-        <a class="nav-link" href="#" (click)="logout(); collapse(); false">
+        <a class="nav-link" href="#" (click)="logout(); collapseNavBar(); false">
           <img [src]="currentUser?.imageUrl" width="24px" height="24px">
           <span>Sign Out</span></a>
       </li>

@@ -4,16 +4,14 @@ import { AccountService } from '../account/account.service';
 import { User } from '../shared/models/user.model';
 import { Subscription } from 'rxjs/Subscription';
 
-declare const $: any;
-// import * as $ from 'jquery';
-// import 'bootstrap';
-
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit, OnDestroy, AfterViewInit {
+  public isCollapsed = true;
+
   public isAuthenticated = false;
   public currentUser: User = null;
 
@@ -59,7 +57,11 @@ export class NavComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  collapse() {
-    $('#navbarToggleArea').collapse('hide');
+  toggleNavBar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
+  collapseNavBar() {
+    this.isCollapsed = true;
   }
 }
