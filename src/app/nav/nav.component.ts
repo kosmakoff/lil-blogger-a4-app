@@ -59,7 +59,7 @@ export class NavComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private collapse() {
+  collapse() {
     $('#navbarToggleArea').collapse('hide');
   }
 }
