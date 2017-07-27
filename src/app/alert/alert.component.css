@@ -1,0 +1,6 @@
+.alert-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  padding: 4rem 1.5rem;
+}

@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/skipWhile';
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
@@ -17,7 +17,8 @@ export class FirebaseService {
     public auth: firebase.auth.Auth;
 
     private currentFbUserSubject = new BehaviorSubject<firebase.User>(null);
-    public currentFbUser = this.currentFbUserSubject.asObservable().distinctUntilChanged();
+    public currentFbUser = this.currentFbUserSubject.asObservable()
+        .skipWhile(fbUser => fbUser === null);
 
     constructor() {
         this.app = this.initializeApp();
