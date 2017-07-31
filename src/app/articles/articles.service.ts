@@ -32,16 +32,19 @@ export class ArticlesService {
         return this.parseFbArticle(fbArticleSnapshot);
     }
 
-    postArticle(article: Article, user: User): Promise<any> {
-        const newArticleRef = this.firebaseService.database.ref(`articles`).push();
-        const fbSetPromise = newArticleRef.set({
-            uid: user.uid,
-            timestamp: Date.now(),
-            title: article.title,
-            body: article.body
-        });
+    async postArticle(article: Article, user: User): Promise<string> {
+        const newArticleKey = this.firebaseService.database.ref().child('articles').push().key;
+        const fbArticle = this.createFbArticle(article, user);
 
-        return PromiseUtils.fbPromiseToPromise(fbSetPromise);
+        const updates = {};
+        updates[`/articles/${newArticleKey}`] = fbArticle;
+        // TODO: add user-articles
+        // TODO: add whatever else is needed here
+
+        const fbSetPromise = this.firebaseService.database.ref().update(updates);
+
+        await PromiseUtils.fbPromiseToPromise(fbSetPromise);
+        return newArticleKey;
     }
 
     private parseFbArticle(fbArticle: any): Article {
@@ -51,5 +54,14 @@ export class ArticlesService {
         article.body = fbArticle.body;
 
         return article;
+    }
+
+    private createFbArticle(article: Article, user: User): any {
+        return {
+            uid: user.uid,
+            timestamp: Date.now(),
+            title: article.title,
+            body: article.body
+        };
     }
 }
