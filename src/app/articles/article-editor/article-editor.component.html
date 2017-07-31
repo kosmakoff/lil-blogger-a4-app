@@ -1,0 +1,16 @@
+<div>
+  <form>
+    <legend>New Article</legend>
+    <div class="form-group">
+      <label for="titleId">Title</label>
+      <input type="text" class="form-control" id="titleId" [(ngModel)]="article.title" name="title">
+    </div>
+    <div class="form-group">
+      <label for="bodyId">Body</label>
+      <textarea type="text" class="form-control" id="bodyId" rows="4" [(ngModel)]="article.body" name="body"></textarea>
+    </div>
+    <p class="text-center text-md-left">
+      <button type="submit" class="btn btn-primary" (click)="postArticle()">Submit</button>
+    </p>
+  </form>
+</div>

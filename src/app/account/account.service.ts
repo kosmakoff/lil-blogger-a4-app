@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 import { User } from '../shared/models/user.model';
 
@@ -20,13 +18,15 @@ export class AccountService {
             .map((user) => this.fbUserToUser(user));
     }
 
-    login(): Observable<User> {
+    login(): Promise<User> {
         return this.firebaseService.login()
-            .map(data => this.fbUserToUser(data.user));
+            .map(data => this.fbUserToUser(data.user))
+            .toPromise();
     }
 
-    logout(): Observable<any> {
-        return this.firebaseService.logout();
+    logout(): Promise<any> {
+        return this.firebaseService.logout()
+            .toPromise();
     }
 
     private fbUserToUser(fbUser: firebase.User): User {

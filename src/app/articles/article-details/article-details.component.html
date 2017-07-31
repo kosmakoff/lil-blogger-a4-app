@@ -1,3 +1,5 @@
-<div class="starter-template">
-  <h1>Article details</h1>
+<div>
+  <div *ngIf="!article">Loading...</div>
+  <h1 *ngIf="article">{{article.title}}</h1>
+  <p *ngIf="article" [innerHTML]="article.body | markdown"></p>
 </div>

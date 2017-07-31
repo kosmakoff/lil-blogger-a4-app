@@ -3,19 +3,18 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailsComponent } from './article-details/article-details.component';
-
-import { environment } from '../../environments/environment';
+import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
 const articlesRoutes: Routes = [
     { path: 'articles', component: ArticleListComponent },
-    { path: 'article/:id', component: ArticleDetailsComponent }
+    { path: 'article/:id', component: ArticleDetailsComponent },
+    { path: 'editor', component: ArticleEditorComponent },
+    { path: 'editor/:id', component: ArticleEditorComponent }
 ];
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(articlesRoutes, {
-            enableTracing: environment.enableTracing
-        })
+        RouterModule.forChild(articlesRoutes)
     ],
     exports: [
         RouterModule

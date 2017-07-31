@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailsComponent } from './article-details/article-details.component';
+import { MarkdownPipe } from './markdown.pipe';
 
 import { ArticlesService } from './articles.service';
 
 import { ArticlesRoutingModule } from './articles-routing.module';
+import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
 @NgModule({
     imports: [
@@ -17,7 +19,9 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     ],
     declarations: [
         ArticleListComponent,
-        ArticleDetailsComponent
+        ArticleDetailsComponent,
+        MarkdownPipe,
+        ArticleEditorComponent
     ],
     providers: [
         ArticlesService

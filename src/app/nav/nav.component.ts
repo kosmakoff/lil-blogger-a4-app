@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -12,7 +12,7 @@ import { User } from '../shared/models/user.model';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
-export class NavComponent implements OnInit, OnDestroy, AfterViewInit {
+export class NavComponent implements OnInit, OnDestroy {
   public isCollapsed = true;
 
   public currentUser: User = null;
@@ -26,38 +26,13 @@ export class NavComponent implements OnInit, OnDestroy, AfterViewInit {
       // firebase activities are not detected properly by Angular
       // so we need to update binding variables in NgZone, explicitly
       this.zone.run(() => {
-        let message: string;
-        if (user !== null) {
-          message = `${user.username} has just logged in`;
-          this.alertService.success(message, undefined, 1500);
-        } else {
-          message = `User has just logged out`;
-          this.alertService.success(message, undefined, 1500);
-        }
         this.currentUser = user;
       });
     });
   }
 
-  ngAfterViewInit(): void {
-  }
-
   ngOnDestroy(): void {
     this.currentUserSubscription.unsubscribe();
-  }
-
-  login() {
-    this.accountService.login().subscribe((user) => {
-      const message = `${user.username} has just logged in`;
-      console.log(message);
-    });
-  }
-
-  logout() {
-    this.accountService.logout().subscribe(() => {
-      const message = `User has just logged out`;
-      console.log(message);
-    });
   }
 
   toggleNavBar() {

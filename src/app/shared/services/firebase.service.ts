@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/skipWhile';
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 
 import { User } from '../models/user.model';
 
@@ -15,14 +15,16 @@ import { User } from '../models/user.model';
 export class FirebaseService {
     private app: firebase.app.App;
     public auth: firebase.auth.Auth;
+    public database: firebase.database.Database;
 
     private currentFbUserSubject = new BehaviorSubject<firebase.User>(null);
     public currentFbUser = this.currentFbUserSubject.asObservable()
-        .skipWhile(fbUser => fbUser === null);
+        .distinctUntilChanged();
 
     constructor() {
         this.app = this.initializeApp();
         this.auth = this.app.auth();
+        this.database = this.app.database();
 
         this.auth.onAuthStateChanged((user: firebase.User) => {
             this.currentFbUserSubject.next(user);
@@ -33,7 +35,7 @@ export class FirebaseService {
         return firebase.initializeApp({
             apiKey: 'AIzaSyC7trcMDddXzPyFWqwQuQUYL1bBxmIDtQE',
             authDomain: 'lil-blogger.firebaseapp.com',
-            databaseURL: 'https://lil-blogger.firebaseio.com/'
+            databaseURL: 'https://lil-blogger.firebaseio.com'
         });
     }
 

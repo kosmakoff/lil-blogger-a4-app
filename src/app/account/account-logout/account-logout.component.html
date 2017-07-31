@@ -1,0 +1,9 @@
+<p *ngIf="currentUser">
+  You are currently logged in as {{currentUser.username}}. Click the button below to log out.
+</p>
+<p *ngIf="currentUser" class="text-center">
+  <img [src]="currentUser.imageUrl" width="128" height="128">
+</p>
+<p *ngIf="currentUser" class="text-center">
+  <button class="btn btn-primary" (click)="logout()" [class.disabled]="isBusy">Log out</button>
+</p>

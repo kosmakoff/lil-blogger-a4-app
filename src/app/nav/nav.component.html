@@ -6,6 +6,9 @@
   
   <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed">
     <ul class="nav navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/editor" (click)="collapseNavBar(); false">New article</a>
+      </li>
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" routerLink="/articles" (click)="collapseNavBar(); false">Articles</a>
       </li>
@@ -14,11 +17,11 @@
       </li>
     </ul>
     <ul class="nav navbar-nav">
-      <li *ngIf="currentUser === null" class="nav-item">
-        <a class="nav-link" href="#" (click)="login(); collapseNavBar(); false">Sign In</a>
+      <li *appAccountSignedin="false" class="nav-item">
+        <a class="nav-link" href="#" routerLink="/login" (click)="collapseNavBar(); false">Sign In</a>
       </li>
-      <li *ngIf="currentUser !== null" class="nav-item">
-        <a class="nav-link" href="#" (click)="logout(); collapseNavBar(); false">
+      <li *appAccountSignedin="true" class="nav-item">
+        <a class="nav-link" href="#" routerLink="/logout" (click)="collapseNavBar(); false">
           <img [src]="currentUser.imageUrl" width="24px" height="24px">
           <span>Sign Out</span></a>
       </li>
