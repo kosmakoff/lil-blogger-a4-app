@@ -1,0 +1,14 @@
+{
+    "rules": {
+        ".read": "auth != null",
+        "articles": {
+            ".indexOn": [
+                "createdAt"
+            ],
+            "$article": {
+                ".write": "newData.child('uid').val() === auth.uid",
+                ".validate": "newData.hasChild('uid') && newData.child('uid').isString()"
+            }
+        }
+    }
+}

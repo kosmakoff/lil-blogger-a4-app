@@ -21,8 +21,6 @@ export class AccountLoginComponent implements OnInit {
     this.isBusy = true;
     try {
       const user = await this.accountService.login();
-      const message = `${user.username} has just logged in`;
-      this.alertService.success(message, true, 3000);
       this.router.navigate(['/articles']);
     } catch (error) {
       console.log(`Error, code='${error.code}', message='${error.message}'`);

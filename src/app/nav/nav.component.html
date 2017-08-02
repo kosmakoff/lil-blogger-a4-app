@@ -6,7 +6,7 @@
   
   <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed">
     <ul class="nav navbar-nav mr-auto">
-      <li class="nav-item">
+      <li class="nav-item" *appAccountSignedin="true">
         <a class="nav-link" routerLink="/editor" (click)="collapseNavBar(); false">New article</a>
       </li>
       <li class="nav-item" routerLinkActive="active">

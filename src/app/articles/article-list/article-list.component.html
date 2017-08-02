@@ -1,3 +1,8 @@
 <div>
   <h4>Articles will be here.</h4>
+  <div *ngFor="let article of articles" (click)="viewArticle(article)">
+    <h2>{{article.title}}</h2>
+    <hr />
+  </div>
+  <ngb-pagination [collectionSize]="15" page="1" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
 </div>

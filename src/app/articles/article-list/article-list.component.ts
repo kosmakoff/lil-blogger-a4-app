@@ -1,11 +1,7 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/take';
+import { Router } from '@angular/router';
 
 import { ArticlesService } from '../articles.service';
-import { AccountService } from '../../account/account.service';
-import { AlertService } from '../../alert/alert.service';
 
 import { Article } from '../../shared/models/article.model';
 import { Profile } from '../../shared/models/profile.model';
@@ -17,21 +13,19 @@ import { User } from '../../shared/models/user.model';
   styleUrls: ['./article-list.component.css']
 })
 export class ArticleListComponent implements OnInit, OnDestroy {
-  private currentUser: User;
-  private currentUserSubscription: Subscription;
+  public articles: Article[];
 
-  public newArticle: Article;
-
-  constructor(private articlesService: ArticlesService, private accountService: AccountService,
-    private alertService: AlertService, private zone: NgZone) {
-    // this.articlesService.getArticles().take(1).subscribe(articles => {
-    //   console.log(`Got ${articles.length} articles from firebase DB`);
-    // });
+  constructor(private articlesService: ArticlesService, private router: Router) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.articles = await this.articlesService.getArticles();
   }
 
   ngOnDestroy(): void {
+  }
+
+  viewArticle(article: Article): void {
+    this.router.navigate(['/article', article.slug]);
   }
 }

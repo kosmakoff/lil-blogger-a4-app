@@ -38,8 +38,6 @@ export class AccountLogoutComponent implements OnInit, OnDestroy {
     this.isBusy = true;
     await this.accountService.logout();
     this.isBusy = false;
-    const message = `You have just logged out`;
-    this.alertService.success(message, true, 3000);
     this.router.navigate(['/articles']);
   }
 }

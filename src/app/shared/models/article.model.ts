@@ -6,8 +6,8 @@ export class Article {
   description = '';
   body = '';
   tagList: Array<string> = [];
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   favorited: boolean;
   favoritesCount: number;
   author: Profile;

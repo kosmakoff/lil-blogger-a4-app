@@ -17,19 +17,34 @@ export class ArticlesService {
     constructor(private firebaseService: FirebaseService) {
     }
 
+    async getArticlesCount(): Promise<number> {
+        // this.firebaseService.database.ref('articles').
+        return 42;
+    }
     async getArticles(): Promise<Article[]> {
         const valuesPromise: firebase.Promise<firebase.database.DataSnapshot> =
-            this.firebaseService.database.ref(`articles`).once('value');
-        const fbArticlesSnapshot = (await PromiseUtils.fbPromiseToPromise(valuesPromise)).val();
-        debugger;
-        return fbArticlesSnapshot.map(fbArticle => this.parseFbArticle(fbArticlesSnapshot));
+            this.firebaseService.database.ref(`articles`)
+            .orderByChild('createdAt')
+            .limitToFirst(5)
+            .once('value');
+        const fbArticles = await PromiseUtils.fbPromiseToPromise(valuesPromise);
+        const fbArticlesSnapshot = fbArticles.val();
+
+        if (!fbArticlesSnapshot) {
+            return [];
+        }
+
+        return Object.keys(fbArticlesSnapshot)
+            .filter(key => fbArticlesSnapshot.hasOwnProperty(key))
+            .map(key => this.parseFbArticle(key, fbArticlesSnapshot[key]))
+            .sort((a: Article, b: Article) => b.createdAt - a.createdAt);
     }
 
     async getArticle(articleId: string): Promise<Article> {
         const valuePromise: firebase.Promise<firebase.database.DataSnapshot> =
             this.firebaseService.database.ref(`articles/${articleId}`).once('value');
         const fbArticleSnapshot = (await PromiseUtils.fbPromiseToPromise(valuePromise)).val();
-        return this.parseFbArticle(fbArticleSnapshot);
+        return this.parseFbArticle(articleId, fbArticleSnapshot);
     }
 
     async postArticle(article: Article, user: User): Promise<string> {
@@ -47,11 +62,13 @@ export class ArticlesService {
         return newArticleKey;
     }
 
-    private parseFbArticle(fbArticle: any): Article {
+    private parseFbArticle(slug: string, fbArticle: any): Article {
         const article = new Article();
 
+        article.slug = slug;
         article.title = fbArticle.title;
         article.body = fbArticle.body;
+        article.createdAt = fbArticle.createdAt;
 
         return article;
     }
@@ -59,7 +76,7 @@ export class ArticlesService {
     private createFbArticle(article: Article, user: User): any {
         return {
             uid: user.uid,
-            timestamp: Date.now(),
+            createdAt: Date.now(),
             title: article.title,
             body: article.body
         };
