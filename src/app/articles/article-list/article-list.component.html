@@ -1,8 +1,12 @@
 <div>
-  <h4>Articles will be here.</h4>
-  <div *ngFor="let article of articles" (click)="viewArticle(article)">
-    <h2>{{article.title}}</h2>
-    <hr />
+  <div *ngIf="!isLoading && (!articles || !articles.length)" class="text-center">
+    No articles yet. Feel free to <a>add one</a>.
+  </div>
+  <div *ngFor="let article of articles; index as i" (click)="viewArticle(article)">
+    <h4>{{article.title}}</h4>
+    <div [innerHTML]="article.body | slice:0:100 | markdown"></div>
+    <p><small><em>{{ article.createdAt | timeSince }}</em> by <em>somebody</em></small></p>
+    <hr *ngIf="i+1 < articles.length"/>
   </div>
   <div *ngIf="isLoading" class="text-center">
     <p>Loading...</p>

@@ -5,6 +5,7 @@
             ".indexOn": [
                 "order"
             ],
+            ".read": "true",
             "$article": {
                 ".write": "newData.child('uid').val() === auth.uid",
                 ".validate": "newData.hasChild('uid') && newData.child('uid').isString()"

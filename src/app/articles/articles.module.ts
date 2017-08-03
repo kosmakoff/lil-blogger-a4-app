@@ -13,6 +13,8 @@ import { ArticlesService } from './articles.service';
 import { ArticlesRoutingModule } from './articles-routing.module';
 import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
+import { TimeSincePipe } from './time-since.pipe';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -24,7 +26,8 @@ import { ArticleEditorComponent } from './article-editor/article-editor.componen
         ArticleListComponent,
         ArticleDetailsComponent,
         MarkdownPipe,
-        ArticleEditorComponent
+        ArticleEditorComponent,
+        TimeSincePipe
     ],
     providers: [
         ArticlesService
