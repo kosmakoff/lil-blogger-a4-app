@@ -18,15 +18,23 @@ export class ArticlesService {
     }
 
     async getArticlesCount(): Promise<number> {
-        // this.firebaseService.database.ref('articles').
-        return 42;
+        const valuePromise: firebase.Promise<firebase.database.DataSnapshot> =
+            this.firebaseService.database.ref(`counters/articles`).once('value');
+        const countSnapshot = await PromiseUtils.fbPromiseToPromise(valuePromise);
+        return countSnapshot.val();
     }
-    async getArticles(): Promise<Article[]> {
-        const valuesPromise: firebase.Promise<firebase.database.DataSnapshot> =
-            this.firebaseService.database.ref(`articles`)
-            .orderByChild('createdAt')
-            .limitToFirst(5)
-            .once('value');
+
+    async getArticles(limit: number = 10, startAt: number = 0): Promise<Article[]> {
+        let query: firebase.database.Query = this.firebaseService.database.ref('articles')
+            .orderByChild('order');
+
+        if (startAt !== 0) {
+            query = query.startAt(startAt);
+        }
+
+        query = query.limitToFirst(limit);
+
+        const valuesPromise: firebase.Promise<firebase.database.DataSnapshot> = query.once('value');
         const fbArticles = await PromiseUtils.fbPromiseToPromise(valuesPromise);
         const fbArticlesSnapshot = fbArticles.val();
 
@@ -69,14 +77,17 @@ export class ArticlesService {
         article.title = fbArticle.title;
         article.body = fbArticle.body;
         article.createdAt = fbArticle.createdAt;
+        article.order = fbArticle.order;
 
         return article;
     }
 
     private createFbArticle(article: Article, user: User): any {
+        const timestamp = Date.now();
         return {
             uid: user.uid,
-            createdAt: Date.now(),
+            createdAt: timestamp,
+            order: -timestamp,
             title: article.title,
             body: article.body
         };

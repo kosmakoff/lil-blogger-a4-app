@@ -6,6 +6,7 @@ export class Article {
   description = '';
   body = '';
   tagList: Array<string> = [];
+  order: number;
   createdAt: number;
   updatedAt: number;
   favorited: boolean;

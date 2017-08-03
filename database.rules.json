@@ -3,7 +3,7 @@
         ".read": "auth != null",
         "articles": {
             ".indexOn": [
-                "createdAt"
+                "order"
             ],
             "$article": {
                 ".write": "newData.child('uid').val() === auth.uid",

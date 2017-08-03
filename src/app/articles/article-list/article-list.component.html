@@ -4,5 +4,10 @@
     <h2>{{article.title}}</h2>
     <hr />
   </div>
-  <ngb-pagination [collectionSize]="15" page="1" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+  <div *ngIf="isLoading" class="text-center">
+    <p>Loading...</p>
+  </div>
+  <div *ngIf="hasMoreArticles" class="text-center">
+    <button class="btn btn-secondary" (click)="onLoadMoreClicked()">Load more</button>
+  <div>
 </div>
