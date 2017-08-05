@@ -1,6 +1,6 @@
 export class Profile {
   uid: string;
-  username: string;
+  displayName: string;
   bio: string;
   imageUrl: string;
   following: boolean;

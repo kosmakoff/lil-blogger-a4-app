@@ -9,6 +9,7 @@ import * as firebase from 'firebase/app';
 import { FirebaseService } from '../shared/services/firebase.service';
 import { Article } from '../shared/models/article.model';
 import { User } from '../shared/models/user.model';
+import { Profile } from '../shared/models/profile.model';
 
 import { PromiseUtils } from '../shared/utilities/promiseUtils';
 
@@ -49,10 +50,12 @@ export class ArticlesService {
     }
 
     async getArticle(articleId: string): Promise<Article> {
-        const valuePromise: firebase.Promise<firebase.database.DataSnapshot> =
+        const fbArticleDataPromise: firebase.Promise<firebase.database.DataSnapshot> =
             this.firebaseService.database.ref(`articles/${articleId}`).once('value');
-        const fbArticleSnapshot = (await PromiseUtils.fbPromiseToPromise(valuePromise)).val();
-        return this.parseFbArticle(articleId, fbArticleSnapshot);
+        const fbArticleSnapshot = await PromiseUtils.fbPromiseToPromise(fbArticleDataPromise);
+        const fbArticleData = fbArticleSnapshot.val();
+
+        return this.parseFbArticle(articleId, fbArticleData);
     }
 
     async postArticle(article: Article, user: User): Promise<string> {
@@ -61,9 +64,13 @@ export class ArticlesService {
 
         const updates = {};
         updates[`/articles/${newArticleKey}`] = fbArticle;
-        // TODO: add user-articles
-        // TODO: add whatever else is needed here
 
+        // TODO: rewrite as server-side function
+        /*
+        updates[`/user-articles/${user.uid}/${newArticleKey}`] = {
+            order: fbArticle.order
+        };
+        */
         const fbSetPromise = this.firebaseService.database.ref().update(updates);
 
         await PromiseUtils.fbPromiseToPromise(fbSetPromise);
@@ -79,6 +86,12 @@ export class ArticlesService {
         article.createdAt = fbArticle.createdAt;
         article.order = fbArticle.order;
 
+        const authorProfile = new Profile();
+        authorProfile.uid = fbArticle.uid;
+        authorProfile.displayName = fbArticle.authorName;
+
+        article.author = authorProfile;
+
         return article;
     }
 
@@ -89,7 +102,8 @@ export class ArticlesService {
             createdAt: timestamp,
             order: -timestamp,
             title: article.title,
-            body: article.body
+            body: article.body,
+            authorName: user.displayName
         };
     }
 }

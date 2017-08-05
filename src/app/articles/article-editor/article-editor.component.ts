@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -20,7 +21,9 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
   private currentUser: User;
   private currentUserSubscription: Subscription;
 
+  public articleForm: FormGroup;
   public article: Article;
+
   constructor(private articlesService: ArticlesService,
     private accountService: AccountService,
     private alertService: AlertService,
@@ -35,6 +38,14 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
     });
 
     this.clearInputs();
+
+    this.articleForm = new FormGroup({
+      'title': new FormControl(this.article.title, [
+        Validators.required,
+        Validators.minLength(4)
+      ]),
+      'body': new FormControl(this.article.body, Validators.required)
+    });
   }
 
   ngOnDestroy(): void {
@@ -52,5 +63,13 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
 
     this.article.title = '';
     this.article.body = '';
+  }
+
+  get title() {
+    return this.articleForm.get('title');
+  }
+
+  get body() {
+    return this.articleForm.get('body');
   }
 }

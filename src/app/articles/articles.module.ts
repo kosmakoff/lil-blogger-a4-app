@@ -9,10 +9,12 @@ import { ArticleDetailsComponent } from './article-details/article-details.compo
 import { MarkdownPipe } from './markdown.pipe';
 
 import { ArticlesService } from './articles.service';
+import { DialogService } from '../shared/services/dialog.service';
 
 import { ArticlesRoutingModule } from './articles-routing.module';
 import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
+import { EllipsisPipe } from './ellipsis.pipe';
 import { TimeSincePipe } from './time-since.pipe';
 
 @NgModule({
@@ -27,10 +29,12 @@ import { TimeSincePipe } from './time-since.pipe';
         ArticleDetailsComponent,
         MarkdownPipe,
         ArticleEditorComponent,
+        EllipsisPipe,
         TimeSincePipe
     ],
     providers: [
-        ArticlesService
+        ArticlesService,
+        DialogService
     ]
 })
 export class ArticlesModule { }

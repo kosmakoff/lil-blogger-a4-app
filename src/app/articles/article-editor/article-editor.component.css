@@ -1,0 +1,13 @@
+.input-indicator {
+    border-left-width: .25rem;
+}
+
+.input-indicator.ng-touched.ng-valid[required], .input-indicator.ng-touched.ng-valid.required,
+.input-indicator.ng-dirty.ng-valid[required], .input-indicator.ng-dirty.ng-valid.required {
+    border-left-color: #42a948;
+}
+
+.input-indicator.ng-touched.ng-invalid:not(form),
+.input-indicator.ng-dirty.ng-invalid:not(form) {
+    border-left-color: #a94442;
+}

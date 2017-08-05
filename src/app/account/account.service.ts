@@ -38,7 +38,7 @@ export class AccountService {
 
         user.uid = fbUser.uid;
         user.email = fbUser.email;
-        user.username = fbUser.displayName;
+        user.displayName = fbUser.displayName;
         user.imageUrl = fbUser.photoURL;
 
         return user;

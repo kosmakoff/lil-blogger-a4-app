@@ -1,6 +1,6 @@
 {
     "rules": {
-        ".read": "auth != null",
+        ".read": "auth !== null",
         "articles": {
             ".indexOn": [
                 "order"
@@ -8,7 +8,13 @@
             ".read": "true",
             "$article": {
                 ".write": "newData.child('uid').val() === auth.uid",
-                ".validate": "newData.hasChild('uid') && newData.child('uid').isString()"
+                ".validate": "newData.child('uid').isString() && newData.child('body').isString() && newData.child('createdAt').isNumber() && newData.child('order').isNumber() && newData.child('title').isString()"
+            }
+        },
+        "user-articles": {
+            "$userId": {
+                ".read": "true",
+                ".write": "auth.uid === $userId"
             }
         }
     }

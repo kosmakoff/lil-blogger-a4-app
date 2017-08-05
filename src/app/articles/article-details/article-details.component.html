@@ -1,5 +1,8 @@
 <div>
   <div *ngIf="!article">Loading...</div>
-  <h1 *ngIf="article">{{article.title}}</h1>
-  <p *ngIf="article" [innerHTML]="article.body | markdown"></p>
+  <div *ngIf="article">
+    <h1>{{article.title}}</h1>
+    <p><small><em>{{ article.createdAt | timeSince }}</em> by <em>{{ article.author.displayName }}</em></small></p>
+    <div [innerHTML]="article.body | markdown"></div>
+  </div>
 </div>

@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUserSubscription = this.accountService.currentUser.subscribe(user => {
       if (user) {
-        const message = `${user.username} has just logged in`;
+        const message = `${user.displayName} has just logged in`;
         this.alertService.success(message, true, 3000);
       } else {
         const message = `You have just logged out`;

@@ -5,10 +5,18 @@ import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailsComponent } from './article-details/article-details.component';
 import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
+import { CanDeactivateEditor } from './article-editor/can-deactivate-editor-guard.service';
+
 const articlesRoutes: Routes = [
     { path: 'articles', component: ArticleListComponent },
     { path: 'article/:id', component: ArticleDetailsComponent },
-    { path: 'editor', component: ArticleEditorComponent },
+    {
+        path: 'editor',
+        component: ArticleEditorComponent,
+        canDeactivate: [
+            CanDeactivateEditor
+        ]
+    },
     { path: 'editor/:id', component: ArticleEditorComponent }
 ];
 
@@ -18,6 +26,9 @@ const articlesRoutes: Routes = [
     ],
     exports: [
         RouterModule
+    ],
+    providers: [
+        CanDeactivateEditor
     ]
 })
 export class ArticlesRoutingModule { }
