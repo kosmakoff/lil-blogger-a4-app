@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, OnChanges, NgZone, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, NgZone, Input } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -17,20 +17,21 @@ import { User } from '../../shared/models/user.model';
   templateUrl: './article-editor.component.html',
   styleUrls: ['./article-editor.component.css']
 })
-export class ArticleEditorComponent implements OnInit, OnDestroy, OnChanges {
+export class ArticleEditorComponent implements OnInit, OnDestroy {
   private currentUser: User;
   private currentUserSubscription: Subscription;
 
   public articleForm: FormGroup;
-  @Input() public article: Article;
+
+  public isNew = false;
 
   constructor(private articlesService: ArticlesService,
     private accountService: AccountService,
     private alertService: AlertService,
     private router: Router,
+    private route: ActivatedRoute,
     private zone: NgZone,
     private formBuilder: FormBuilder) {
-    this.article = new Article();
     this.createForm();
   }
 
@@ -40,17 +41,25 @@ export class ArticleEditorComponent implements OnInit, OnDestroy, OnChanges {
         this.currentUser = user;
       });
     });
+
+    this.route.data.subscribe((data: { article: Article }) => {
+      const article = data.article;
+
+      if (article) {
+        this.isNew = false;
+        this.articleForm.reset({
+          title: article.title,
+          body: article.body
+        });
+      } else {
+        this.isNew = true;
+        this.articleForm.reset();
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.currentUserSubscription.unsubscribe();
-  }
-
-  ngOnChanges(): void {
-    this.articleForm.reset({
-      title: this.article.title,
-      body: this.article.body
-    });
   }
 
   createForm() {
@@ -61,13 +70,13 @@ export class ArticleEditorComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   async postArticle() {
-    this.article = this.prepareArticle();
-    const newPostKey = await this.articlesService.postArticle(this.article, this.currentUser);
+    const article = this.prepareArticle();
+    const newPostKey = await this.articlesService.postArticle(article, this.currentUser);
 
     // mark the form as "clean" so that CanDeactivate guard is not triggered
     this.articleForm.markAsPristine();
 
-    this.alertService.info(`Article '${this.article.title}' was saved`, true, 1500);
+    this.alertService.info(`Article '${article.title}' was saved`, true, 1500);
     this.router.navigate(['/article/', newPostKey]);
   }
 

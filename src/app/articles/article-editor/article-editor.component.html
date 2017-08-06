@@ -1,6 +1,7 @@
 <div>
   <form #formDir="ngForm" [formGroup]="articleForm" novalidate>
-    <legend>New/Edit Article</legend>
+    <legend *ngIf="isNew">New Article</legend>
+    <legend *ngIf="!isNew">Edit Article</legend>
     <div class="form-group"
       [class.has-success]="title.valid && (title.touched || title.dirty)"
       [class.has-danger]="title.invalid && (title.touched || title.dirty)">
