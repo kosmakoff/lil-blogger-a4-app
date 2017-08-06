@@ -1,13 +1,12 @@
 <div>
-  <form #articleForm="ngForm" (ngSubmit)="postArticle()">
+  <form #formDir="ngForm" [formGroup]="articleForm" novalidate>
     <legend>New/Edit Article</legend>
     <div class="form-group"
       [class.has-success]="title.valid && (title.touched || title.dirty)"
       [class.has-danger]="title.invalid && (title.touched || title.dirty)">
       <label for="titleId" class="form-control-label">Title</label>
       <input type="text" id="title" name="title" class="form-control"
-        required minlength="4" placeholder="Article Title"
-        [(ngModel)]="article.title" #title="ngModel"
+        placeholder="Article Title" formControlName="title"
         [class.form-control-success]="title.valid && (title.touched || title.dirty)"
         [class.form-control-danger]="title.invalid && (title.touched || title.dirty)">
       <div class="form-control-feedback" *ngIf="title.invalid && title.dirty && title.touched">
@@ -20,8 +19,7 @@
       [class.has-danger]="body.invalid && (body.touched || body.dirty)">
       <label for="bodyId" class="form-control-label">Body</label>
       <textarea type="text" id="body" name="body" class="form-control" rows="4"
-        required placeholder="Article Body"
-        [(ngModel)]="article.body" #body="ngModel"
+        placeholder="Article Body" formControlName="body"
         [class.form-control-success]="body.valid && (body.touched || body.dirty)"
         [class.form-control-danger]="body.invalid && (body.touched || body.dirty)">
       </textarea>
@@ -30,7 +28,8 @@
       </div>
     </div>
     <p class="text-center text-md-left">
-      <button type="submit" class="btn btn-success" [disabled]="!articleForm.form.valid">Submit</button>
+      <button type="submit" class="btn btn-success" [disabled]="articleForm.invalid"
+        (click)="postArticle()">Submit</button>
     </p>
   </form>
 </div>

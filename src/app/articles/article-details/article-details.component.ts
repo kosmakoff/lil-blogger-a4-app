@@ -15,22 +15,14 @@ import { Article } from '../../shared/models/article.model';
 export class ArticleDetailsComponent implements OnInit, OnDestroy {
   public article: Article = null;
 
-  private paramMapSubscription: Subscription;
-
   constructor(private route: ActivatedRoute, private router: Router, private articlesService: ArticlesService) { }
 
   ngOnInit(): void {
-    this.paramMapSubscription = this.route.paramMap
-      .switchMap(async (params: ParamMap) => {
-        const article = await this.articlesService.getArticle(params.get('id'));
-        return article;
-      })
-      .subscribe(article => {
-        this.article = article;
-      });
+    this.route.data.subscribe((data: {article: Article}) => {
+      this.article = data.article;
+    });
   }
 
   ngOnDestroy(): void {
-    this.paramMapSubscription.unsubscribe();
   }
 }

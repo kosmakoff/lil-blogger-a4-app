@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, NgZone, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -17,18 +17,22 @@ import { User } from '../../shared/models/user.model';
   templateUrl: './article-editor.component.html',
   styleUrls: ['./article-editor.component.css']
 })
-export class ArticleEditorComponent implements OnInit, OnDestroy {
+export class ArticleEditorComponent implements OnInit, OnDestroy, OnChanges {
   private currentUser: User;
   private currentUserSubscription: Subscription;
 
   public articleForm: FormGroup;
-  public article: Article;
+  @Input() public article: Article;
 
   constructor(private articlesService: ArticlesService,
     private accountService: AccountService,
     private alertService: AlertService,
     private router: Router,
-    private zone: NgZone) { }
+    private zone: NgZone,
+    private formBuilder: FormBuilder) {
+    this.article = new Article();
+    this.createForm();
+  }
 
   ngOnInit(): void {
     this.currentUserSubscription = this.accountService.currentUser.subscribe(user => {
@@ -36,33 +40,46 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         this.currentUser = user;
       });
     });
-
-    this.clearInputs();
-
-    this.articleForm = new FormGroup({
-      'title': new FormControl(this.article.title, [
-        Validators.required,
-        Validators.minLength(4)
-      ]),
-      'body': new FormControl(this.article.body, Validators.required)
-    });
   }
 
   ngOnDestroy(): void {
     this.currentUserSubscription.unsubscribe();
   }
 
+  ngOnChanges(): void {
+    this.articleForm.reset({
+      title: this.article.title,
+      body: this.article.body
+    });
+  }
+
+  createForm() {
+    this.articleForm = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.minLength(4)]],
+      body: ['', Validators.required]
+    });
+  }
+
   async postArticle() {
+    this.article = this.prepareArticle();
     const newPostKey = await this.articlesService.postArticle(this.article, this.currentUser);
+
+    // mark the form as "clean" so that CanDeactivate guard is not triggered
+    this.articleForm.markAsPristine();
+
     this.alertService.info(`Article '${this.article.title}' was saved`, true, 1500);
     this.router.navigate(['/article/', newPostKey]);
   }
 
-  private clearInputs() {
-    this.article = new Article();
+  prepareArticle(): Article {
+    const formModel = this.articleForm.value;
 
-    this.article.title = '';
-    this.article.body = '';
+    const saveArticle: Article = new Article();
+
+    saveArticle.title = formModel.title;
+    saveArticle.body = formModel.body;
+
+    return saveArticle;
   }
 
   get title() {

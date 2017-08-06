@@ -13,7 +13,6 @@ export class CanDeactivateEditor implements CanDeactivate<ArticleEditorComponent
 
     canDeactivate(component: ArticleEditorComponent, currentRoute: ActivatedRouteSnapshot,
         currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot): boolean | Observable<boolean> | Promise<boolean> {
-        debugger;
         const isDirty = component.articleForm.dirty;
 
         return !isDirty || this.dialogService.confirm('Close without saving changes?');

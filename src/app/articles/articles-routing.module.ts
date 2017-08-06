@@ -6,10 +6,17 @@ import { ArticleDetailsComponent } from './article-details/article-details.compo
 import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
 import { CanDeactivateEditor } from './article-editor/can-deactivate-editor-guard.service';
+import { ArticleDetailsResolver } from './article-details-resolver.service';
 
 const articlesRoutes: Routes = [
     { path: 'articles', component: ArticleListComponent },
-    { path: 'article/:id', component: ArticleDetailsComponent },
+    {
+        path: 'article/:id',
+        component: ArticleDetailsComponent,
+        resolve: {
+            article: ArticleDetailsResolver
+        }
+    },
     {
         path: 'editor',
         component: ArticleEditorComponent,
@@ -17,7 +24,16 @@ const articlesRoutes: Routes = [
             CanDeactivateEditor
         ]
     },
-    { path: 'editor/:id', component: ArticleEditorComponent }
+    {
+        path: 'editor/:id',
+        component: ArticleEditorComponent,
+        canDeactivate: [
+            CanDeactivateEditor
+        ],
+        resolve: {
+            article: ArticleDetailsResolver
+        }
+    }
 ];
 
 @NgModule({
@@ -28,7 +44,8 @@ const articlesRoutes: Routes = [
         RouterModule
     ],
     providers: [
-        CanDeactivateEditor
+        CanDeactivateEditor,
+        ArticleDetailsResolver
     ]
 })
 export class ArticlesRoutingModule { }
