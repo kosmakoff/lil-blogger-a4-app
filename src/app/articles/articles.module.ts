@@ -12,6 +12,8 @@ import { ArticlesService } from './articles.service';
 import { DialogService } from '../shared/services/dialog.service';
 
 import { ArticlesRoutingModule } from './articles-routing.module';
+import { AccountModule } from '../account/account.module';
+
 import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
 import { EllipsisPipe } from './ellipsis.pipe';
@@ -23,7 +25,8 @@ import { TimeSincePipe } from './time-since.pipe';
         FormsModule,
         ReactiveFormsModule,
         NgbModule,
-        ArticlesRoutingModule
+        ArticlesRoutingModule,
+        AccountModule
     ],
     declarations: [
         ArticleListComponent,

@@ -4,5 +4,9 @@
     <h1>{{article.title}}</h1>
     <p><small><em>{{ article.createdAt | timeSince }}</em> by <em>{{ article.author.displayName }}</em></small></p>
     <div [innerHTML]="article.body | markdown"></div>
+    <ng-template [appAccountSignedin]="true" [appAccountSignedinCurrentUser]="article.author">
+      <hr />
+      <button class="btn btn-outline-primary btn-sm" [routerLink]="['/editor', article.slug]">Edit</button>
+    </ng-template>
   </div>
 </div>

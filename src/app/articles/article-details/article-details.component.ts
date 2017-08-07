@@ -4,8 +4,11 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 
-import { ArticlesService } from '../articles.service';
 import { Article } from '../../shared/models/article.model';
+import { User } from '../../shared/models/user.model';
+
+import { ArticlesService } from '../articles.service';
+import { AccountService } from '../../account/account.service';
 
 @Component({
   selector: 'app-article-details',
@@ -14,15 +17,28 @@ import { Article } from '../../shared/models/article.model';
 })
 export class ArticleDetailsComponent implements OnInit, OnDestroy {
   public article: Article = null;
+  public currentUser: User;
 
-  constructor(private route: ActivatedRoute, private router: Router, private articlesService: ArticlesService) { }
+  private currentUserSubscription: Subscription;
+  private routeDataSubscription: Subscription;
+
+  constructor(private route: ActivatedRoute,
+    private router: Router,
+    private articlesService: ArticlesService,
+    private accountService: AccountService) { }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: {article: Article}) => {
+    this.currentUserSubscription = this.accountService.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
+
+    this.routeDataSubscription = this.route.data.subscribe((data: { article: Article }) => {
       this.article = data.article;
     });
   }
 
   ngOnDestroy(): void {
+    this.currentUserSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
   }
 }
