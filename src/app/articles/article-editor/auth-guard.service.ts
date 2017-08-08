@@ -15,12 +15,9 @@ export class AuthGuard implements CanActivate {
     constructor(private accountService: AccountService, private alertService: AlertService, private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        console.log('Auth guard');
         return this.accountService.currentUser.take(1)
             .do(user => {
-                console.log('User', user);
                 if (!user) {
-                    console.log('Auth guard says - NO');
                     this.alertService.error('You should sign in to do that', true, 3000);
                     this.router.navigate(['/articles']);
                 }
