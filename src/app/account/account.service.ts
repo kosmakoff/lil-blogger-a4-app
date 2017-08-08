@@ -29,7 +29,7 @@ export class AccountService {
             .toPromise();
     }
 
-    private fbUserToUser(fbUser: firebase.User): User {
+    private fbUserToUser(fbUser: firebase.UserInfo): User {
         if (fbUser === null) {
             return null;
         }

@@ -8,7 +8,7 @@ import { DialogService } from '../../shared/services/dialog.service';
 import { ArticleEditorComponent } from './article-editor.component';
 
 @Injectable()
-export class CanDeactivateEditor implements CanDeactivate<ArticleEditorComponent> {
+export class UnsavedChangesGuard implements CanDeactivate<ArticleEditorComponent> {
     constructor(private dialogService: DialogService) { }
 
     canDeactivate(component: ArticleEditorComponent, currentRoute: ActivatedRouteSnapshot,

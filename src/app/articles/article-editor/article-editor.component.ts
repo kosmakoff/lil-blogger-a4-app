@@ -46,6 +46,12 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
       const article = data.article;
 
       if (article) {
+
+        if (article.author.uid !== this.currentUser.uid) {
+          this.alertService.error('You can\'t edit article written by someone else.', true, 3000);
+          this.router.navigate(['/articles']);
+        }
+
         this.isNew = false;
         this.articleForm.reset({
           title: article.title,

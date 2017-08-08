@@ -5,7 +5,8 @@ import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailsComponent } from './article-details/article-details.component';
 import { ArticleEditorComponent } from './article-editor/article-editor.component';
 
-import { CanDeactivateEditor } from './article-editor/can-deactivate-editor-guard.service';
+import { UnsavedChangesGuard } from './article-editor/unsaved-changes-guard.service';
+import { AuthGuard } from './article-editor/auth-guard.service';
 import { ArticleDetailsResolver } from './article-details-resolver.service';
 
 const articlesRoutes: Routes = [
@@ -21,18 +22,24 @@ const articlesRoutes: Routes = [
         path: 'editor',
         component: ArticleEditorComponent,
         canDeactivate: [
-            CanDeactivateEditor
+            UnsavedChangesGuard
+        ],
+        canActivate: [
+            AuthGuard
         ]
     },
     {
         path: 'editor/:id',
         component: ArticleEditorComponent,
         canDeactivate: [
-            CanDeactivateEditor
+            UnsavedChangesGuard
         ],
         resolve: {
             article: ArticleDetailsResolver
-        }
+        },
+        canActivate: [
+            AuthGuard
+        ]
     }
 ];
 
@@ -44,7 +51,8 @@ const articlesRoutes: Routes = [
         RouterModule
     ],
     providers: [
-        CanDeactivateEditor,
+        UnsavedChangesGuard,
+        AuthGuard,
         ArticleDetailsResolver
     ]
 })

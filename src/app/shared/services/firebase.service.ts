@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -17,16 +18,22 @@ export class FirebaseService {
     public auth: firebase.auth.Auth;
     public database: firebase.database.Database;
 
-    private currentFbUserSubject = new BehaviorSubject<firebase.User>(null);
-    public currentFbUser = this.currentFbUserSubject.asObservable()
-        .distinctUntilChanged();
+    private currentFbUserSubject: Subject<firebase.UserInfo>;
+    public currentFbUser: Observable<firebase.UserInfo>;
 
     constructor() {
         this.app = this.initializeApp();
         this.auth = this.app.auth();
         this.database = this.app.database();
 
+        const currentUser = this.auth.currentUser || this.tryFetchUserFromStorage();
+
+        this.currentFbUserSubject = new BehaviorSubject<firebase.UserInfo>(currentUser);
+        this.currentFbUser = this.currentFbUserSubject.asObservable()
+            .distinctUntilChanged(this.compareUsers);
+
         this.auth.onAuthStateChanged((user: firebase.User) => {
+            console.log('User changed', user);
             this.currentFbUserSubject.next(user);
         });
     }
@@ -48,5 +55,37 @@ export class FirebaseService {
 
     logout(): Observable<any> {
         return Observable.fromPromise(this.auth.signOut());
+    }
+
+    private tryFetchUserFromStorage(): firebase.UserInfo | null {
+        const keysCount = localStorage.length;
+        let firebaseUserKey: string = null;
+        for (let i = 0; i < keysCount; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('firebase:authUser')) {
+                firebaseUserKey = key;
+            }
+        }
+
+        // no key - no user
+        if (!firebaseUserKey) {
+            return null;
+        }
+
+        const userString = localStorage.getItem(firebaseUserKey);
+        const userObject = JSON.parse(userString);
+
+        return {
+            displayName: userObject.displayName,
+            email: userObject.email,
+            phoneNumber: userObject.phoneNumber,
+            photoURL: userObject.photoURL,
+            providerId: 'google.com',
+            uid: userObject.uid
+        };
+    }
+
+    private compareUsers(userA: firebase.UserInfo, userB: firebase.UserInfo): boolean {
+        return !userA && !userB || userA && userB && userA.uid === userB.uid;
     }
 }
