@@ -19,14 +19,26 @@
       [class.has-success]="body.valid && (body.touched || body.dirty)"
       [class.has-danger]="body.invalid && (body.touched || body.dirty)">
       <label for="bodyId" class="form-control-label">Body</label>
-      <textarea type="text" id="body" name="body" class="form-control" rows="4"
-        placeholder="Article Body" formControlName="body"
-        [class.form-control-success]="body.valid && (body.touched || body.dirty)"
-        [class.form-control-danger]="body.invalid && (body.touched || body.dirty)">
-      </textarea>
-      <div class="form-control-feedback" *ngIf="body.invalid && body.dirty && body.touched">
-        <div *ngIf="body.errors.required">Body cannot be empty</div>
-      </div>
+      <ngb-tabset>
+        <ngb-tab title="Write">
+          <ng-template ngbTabContent>
+              <textarea type="text" id="body" name="body" class="form-control" rows="4"
+                placeholder="Article Body" formControlName="body"
+                [class.form-control-success]="body.valid && (body.touched || body.dirty)"
+                [class.form-control-danger]="body.invalid && (body.touched || body.dirty)">
+              </textarea>
+              <div class="form-control-feedback" *ngIf="body.invalid && body.dirty && body.touched">
+                <div *ngIf="body.errors.required">Body cannot be empty</div>
+              </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Preview">
+          <ng-template ngbTabContent>
+            <div *ngIf="body.value" [innerHTML]="body.value | markdown" class="preview-control"></div>
+            <p *ngIf="!body.value" class="preview-control">Nothing to preview &hellip;</p>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
     </div>
     <p class="text-center text-md-left">
       <button type="submit" class="btn btn-success" [disabled]="articleForm.invalid"

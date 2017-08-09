@@ -78,7 +78,6 @@ export class FirebaseService {
         return {
             displayName: userObject.displayName,
             email: userObject.email,
-            phoneNumber: userObject.phoneNumber,
             photoURL: userObject.photoURL,
             providerId: 'google.com',
             uid: userObject.uid

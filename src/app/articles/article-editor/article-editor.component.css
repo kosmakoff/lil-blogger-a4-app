@@ -1,13 +1,7 @@
-.input-indicator {
-    border-left-width: .25rem;
+textarea {
+  font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
 }
 
-.input-indicator.ng-touched.ng-valid[required], .input-indicator.ng-touched.ng-valid.required,
-.input-indicator.ng-dirty.ng-valid[required], .input-indicator.ng-dirty.ng-valid.required {
-    border-left-color: #42a948;
-}
-
-.input-indicator.ng-touched.ng-invalid:not(form),
-.input-indicator.ng-dirty.ng-invalid:not(form) {
-    border-left-color: #a94442;
+.preview-control {
+    padding: 0.5rem 0.75rem;
 }
