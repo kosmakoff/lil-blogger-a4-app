@@ -14,7 +14,6 @@ export class ArticleDetailsResolver implements Resolve<Article> {
     }
 
     async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Article> {
-        console.log('Resolve guard');
         const articleId = route.paramMap.get('id');
         const article = await this.articleService.getArticle(articleId);
 
@@ -26,5 +25,4 @@ export class ArticleDetailsResolver implements Resolve<Article> {
             return null;
         }
     }
-
 }

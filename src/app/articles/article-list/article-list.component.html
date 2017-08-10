@@ -6,7 +6,7 @@
     <div (click)="viewArticle(article)">
       <h4>{{article.title}}</h4>
       <div [innerHTML]="article.body | ellipsis:100 | markdown"></div>
-      <p><small><em>{{ article.createdAt | timeSince }}</em> by <em>{{ article.author.displayName }}</em></small></p>
+      <app-article-date-line [article]="article"></app-article-date-line>
     </div>
     <hr *ngIf="i+1 < articles.length"/>
   </div>

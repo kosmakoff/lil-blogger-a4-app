@@ -4,18 +4,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { ArticlesRoutingModule } from './articles-routing.module';
+import { AccountModule } from '../account/account.module';
+
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailsComponent } from './article-details/article-details.component';
-import { MarkdownPipe } from './markdown.pipe';
+import { ArticleEditorComponent } from './article-editor/article-editor.component';
+import { ArticleDateLineComponent } from './article-date-line/article-date-line.component';
 
 import { ArticlesService } from './articles.service';
 import { DialogService } from '../shared/services/dialog.service';
 
-import { ArticlesRoutingModule } from './articles-routing.module';
-import { AccountModule } from '../account/account.module';
-
-import { ArticleEditorComponent } from './article-editor/article-editor.component';
-
+import { MarkdownPipe } from './markdown.pipe';
 import { EllipsisPipe } from './ellipsis.pipe';
 import { TimeSincePipe } from './time-since.pipe';
 
@@ -31,8 +31,9 @@ import { TimeSincePipe } from './time-since.pipe';
     declarations: [
         ArticleListComponent,
         ArticleDetailsComponent,
-        MarkdownPipe,
         ArticleEditorComponent,
+        ArticleDateLineComponent,
+        MarkdownPipe,
         EllipsisPipe,
         TimeSincePipe
     ],

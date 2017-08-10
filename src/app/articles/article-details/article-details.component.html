@@ -2,7 +2,7 @@
   <div *ngIf="!article">Loading...</div>
   <div *ngIf="article">
     <h1>{{article.title}}</h1>
-    <p><small><em>{{ article.createdAt | timeSince }}</em> by <em>{{ article.author.displayName }}</em></small></p>
+    <app-article-date-line [article]="article"></app-article-date-line>
     <div [innerHTML]="article.body | markdown"></div>
     <ng-template [appAccountSignedin]="true" [appAccountSignedinCurrentUser]="article.author">
       <hr />

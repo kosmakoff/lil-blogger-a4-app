@@ -22,10 +22,8 @@ export class AccountLogoutComponent implements OnInit, OnDestroy {
   constructor(private accountService: AccountService, private alertService: AlertService, private router: Router) { }
 
   ngOnInit(): void {
-    console.log(`Account.Logout - NgOninit`);
     // debugger;
     this.currentUserSubscription = this.accountService.currentUser.subscribe(user => {
-      console.log('Subscription worked');
       this.currentUser = user;
     });
   }

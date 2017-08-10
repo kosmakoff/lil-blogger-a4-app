@@ -59,7 +59,13 @@ export class ArticlesService {
     }
 
     async postArticle(article: Article, user: User): Promise<string> {
-        const newArticleKey = this.firebaseService.database.ref().child('articles').push().key;
+        let newArticleKey: string;
+        if (article.slug) {
+            newArticleKey = article.slug;
+        } else {
+            newArticleKey = this.firebaseService.database.ref().child('articles').push().key;
+        }
+
         const fbArticle = this.createFbArticle(article, user);
 
         const updates = {};
@@ -84,6 +90,7 @@ export class ArticlesService {
         article.title = fbArticle.title;
         article.body = fbArticle.body;
         article.createdAt = fbArticle.createdAt;
+        article.updatedAt = fbArticle.updatedAt;
         article.order = fbArticle.order;
 
         const authorProfile = new Profile();
@@ -99,7 +106,8 @@ export class ArticlesService {
         const timestamp = Date.now();
         return {
             uid: user.uid,
-            createdAt: timestamp,
+            createdAt: article.createdAt || timestamp,
+            updatedAt: timestamp,
             order: -timestamp,
             title: article.title,
             body: article.body,

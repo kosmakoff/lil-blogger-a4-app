@@ -33,7 +33,6 @@ export class FirebaseService {
             .distinctUntilChanged(this.compareUsers);
 
         this.auth.onAuthStateChanged((user: firebase.User) => {
-            console.log('User changed', user);
             this.currentFbUserSubject.next(user);
         });
     }

@@ -1,0 +1,8 @@
+<p>
+    <small>
+        <em>{{ article.createdAt | timeSince }}</em> by <em>{{ article.author.displayName }}</em>
+        <ng-template [ngIf]="article.updatedAt && article.updatedAt !== article.createdAt">
+            (updated <em>{{ article.updatedAt | timeSince }}</em>)
+        </ng-template>
+    </small>
+</p>
