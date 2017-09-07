@@ -25,6 +25,8 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
 
   public isNew = false;
 
+  public isSaving = false;
+
   private articleSlug: string;
   private articleCreatedAt: number;
 
@@ -84,8 +86,10 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
   }
 
   async postArticle() {
+    this.isSaving = true;
     const article = this.prepareArticle();
     const newPostKey = await this.articlesService.postArticle(article, this.currentUser);
+    this.isSaving = false;
 
     // mark the form as "clean" so that CanDeactivate guard is not triggered
     this.articleForm.markAsPristine();

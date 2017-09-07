@@ -41,8 +41,11 @@
       </ngb-tabset>
     </div>
     <p class="text-center text-md-left">
-      <button type="submit" class="btn btn-success" [disabled]="articleForm.invalid"
-        (click)="postArticle()">Submit</button>
+      <button type="submit" class="btn btn-success" [disabled]="articleForm.invalid || isSaving"
+        (click)="postArticle()">
+          <ng-template [ngIf]="!isSaving">Submit</ng-template>
+          <ng-template [ngIf]="isSaving">Submitting&hellip;</ng-template>
+          </button>
     </p>
   </form>
 </div>
