@@ -1,6 +1,6 @@
 <p>
     <small>
-        <em>{{ article.createdAt | timeSince }}</em> by <em>{{ article.author.displayName }}</em>
+        <em>{{ article.createdAt | timeSince }}</em> by <img [src]="article.author.imageUrl" width="24px" height="24px"><em>{{ article.author.displayName }}</em>
         <ng-template [ngIf]="article.updatedAt && article.updatedAt !== article.createdAt">
             (updated <em>{{ article.updatedAt | timeSince }}</em>)
         </ng-template>

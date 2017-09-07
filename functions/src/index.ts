@@ -1,43 +1,42 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 import * as functions from 'firebase-functions';
+import { DeltaSnapshot } from 'firebase-functions/lib/providers/database';
+import { Event } from 'firebase-functions';
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 import * as admin from 'firebase-admin';
 admin.initializeApp(functions.config().firebase);
 
-// Updates counter for Articles
-exports.updateArticlesCounter = functions.database.ref('/articles/{pushId}').onWrite(event => {
-    const isNew = event.data.exists() && !event.data.previous.exists();
-    const isDelete = !event.data.exists() && event.data.previous.exists();
+const createUpdateArticleHandler = (event: Event<DeltaSnapshot>) => {
+    const articleId = event.params.pushId;
+    const userId = event.data.val().uid;
 
-    const countRef = admin.database().ref('counters/articles');
+    const data = event.data.val();
 
-    return countRef.transaction(current => {
-        if (isNew) {
-            return (current || 0) + 1;
-        } else if (isDelete) {
-            return (current || 0) - 1;
-        } else {
-            return (current || 0);
-        }
-    });
+    return admin.database().ref(`user-articles/${userId}/${articleId}`).set(data);
+};
+
+exports.onAddArticle = functions.database.ref('/articles/{pushId}').onCreate(createUpdateArticleHandler);
+exports.onUpdateArticle = functions.database.ref('/articles/{pushId}').onUpdate(createUpdateArticleHandler);
+
+exports.onDeleteArticle = functions.database.ref('/articles/{pushId}').onDelete(event => {
+    const articleId = event.params.pushId;
+    const userId = event.data.previous.val().uid;
+
+    return admin.database().ref(`user-articles/${userId}/${articleId}`).remove();
 });
 
-// Handles user data storage
 exports.onUserAccountCreated = functions.auth.user().onCreate(event => {
     const userRecord = event.data;
 
-    const uid = userRecord.uid;
-    const displayName = userRecord.displayName;
-
-    return admin.database().ref(`users/${uid}`).set({
-        displayName: displayName
+    return admin.database().ref(`users/${userRecord.uid}`).set({
+        displayName: userRecord.displayName,
+        photoURL: userRecord.photoURL
     });
 });
 
-exports.onUserAccountDeleted = functions.auth.user().onDelete(event => {
+exports.onUserAccountCreated = functions.auth.user().onDelete(event => {
     const userRecord = event.data;
-    const uid = userRecord.uid;
 
-    return admin.database().ref(`users/${uid}`).remove();
+    return admin.database().ref(`users/${userRecord.uid}`).remove();
 });

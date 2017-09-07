@@ -14,7 +14,10 @@
         "user-articles": {
             "$userId": {
                 ".read": "true",
-                ".write": "auth.uid === $userId"
+                ".write": "auth.uid === $userId",
+                ".indexOn": [
+                    "order"
+                ]
             }
         }
     }

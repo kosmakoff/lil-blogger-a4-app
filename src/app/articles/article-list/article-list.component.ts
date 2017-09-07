@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { Subscription } from 'rxjs/Subscription';
 
 import { ArticlesService } from '../articles.service';
 
 import { Article } from '../../shared/models/article.model';
 import { Profile } from '../../shared/models/profile.model';
-import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-article-list',
@@ -18,15 +19,24 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public articles: Article[];
   public isLoading = false;
 
-  constructor(private articlesService: ArticlesService, private router: Router) {
+  public authorProfile: Profile;
+
+  private routeDataSubscription: Subscription;
+
+  constructor(private articlesService: ArticlesService, private router: Router, private route: ActivatedRoute) {
   }
 
   async ngOnInit(): Promise<void> {
     this.articles = [];
-    await this.loadNextBatchOfArticles();
+
+    this.routeDataSubscription = this.route.data.subscribe(async (data: {author: Profile | null}) => {
+      this.authorProfile = data.author || null;
+      await this.loadNextBatchOfArticles();
+    });
   }
 
   ngOnDestroy(): void {
+    this.routeDataSubscription.unsubscribe();
   }
 
   async loadNextBatchOfArticles(): Promise<void> {

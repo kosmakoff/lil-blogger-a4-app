@@ -16,12 +16,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:code": "ng build --env=prod --prod",
-    "deploy:code": "npm run build:code && firebase deploy --only hosting",
+    "build:site": "ng build --env=prod --prod",
+    "deploy:site": "npm run build:site && firebase deploy --only hosting",
     "build:functions": "npm run --prefix functions build",
     "deploy:functions": "npm run build:functions && firebase deploy --only functions",
     "deploy:database": "firebase deploy --only database",
-    "deploy:all": "npm run build:code && npm run build:functions && firebase deploy",
+    "deploy:all": "npm run build:site && npm run build:functions && firebase deploy",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

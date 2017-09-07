@@ -1,6 +1,5 @@
-export class User {
+import { Profile } from './profile.model';
+
+export class User extends Profile {
   public email: string;
-  public uid: string;
-  public displayName: string;
-  public imageUrl: string;
 }

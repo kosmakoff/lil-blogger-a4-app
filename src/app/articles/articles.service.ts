@@ -8,7 +8,6 @@ import * as firebase from 'firebase/app';
 
 import { FirebaseService } from '../shared/services/firebase.service';
 import { Article } from '../shared/models/article.model';
-import { User } from '../shared/models/user.model';
 import { Profile } from '../shared/models/profile.model';
 
 import { PromiseUtils } from '../shared/utilities/promiseUtils';
@@ -25,9 +24,9 @@ export class ArticlesService {
         return countSnapshot.val();
     }
 
-    async getArticles(limit: number = 10, startAt: number = 0): Promise<Article[]> {
-        let query: firebase.database.Query = this.firebaseService.database.ref('articles')
-            .orderByChild('order');
+    async getArticles(limit: number = 10, startAt: number = 0, authorUid: string = null): Promise<Article[]> {
+        const ref = authorUid ? `user-articles/${authorUid}` : 'articles';
+        let query: firebase.database.Query = this.firebaseService.database.ref('articles').orderByChild('order');
 
         if (startAt !== 0) {
             query = query.startAt(startAt);
@@ -58,29 +57,19 @@ export class ArticlesService {
         return this.parseFbArticle(articleId, fbArticleData);
     }
 
-    async postArticle(article: Article, user: User): Promise<string> {
-        let newArticleKey: string;
+    async postArticle(article: Article, user: Profile): Promise<string> {
+        let articleKey: string;
         if (article.slug) {
-            newArticleKey = article.slug;
+            articleKey = article.slug;
         } else {
-            newArticleKey = this.firebaseService.database.ref().child('articles').push().key;
+            articleKey = this.firebaseService.database.ref().child('articles').push().key;
         }
 
         const fbArticle = this.createFbArticle(article, user);
-
-        const updates = {};
-        updates[`/articles/${newArticleKey}`] = fbArticle;
-
-        // TODO: rewrite as server-side function
-        /*
-        updates[`/user-articles/${user.uid}/${newArticleKey}`] = {
-            order: fbArticle.order
-        };
-        */
-        const fbSetPromise = this.firebaseService.database.ref().update(updates);
+        const fbSetPromise = this.firebaseService.database.ref(`/articles/${articleKey}`).set(fbArticle);
 
         await PromiseUtils.fbPromiseToPromise(fbSetPromise);
-        return newArticleKey;
+        return articleKey;
     }
 
     private parseFbArticle(slug: string, fbArticle: any): Article {
@@ -96,13 +85,14 @@ export class ArticlesService {
         const authorProfile = new Profile();
         authorProfile.uid = fbArticle.uid;
         authorProfile.displayName = fbArticle.authorName;
+        authorProfile.imageUrl = fbArticle.authorPhotoURL;
 
         article.author = authorProfile;
 
         return article;
     }
 
-    private createFbArticle(article: Article, user: User): any {
+    private createFbArticle(article: Article, user: Profile): any {
         const timestamp = Date.now();
         return {
             uid: user.uid,
@@ -111,7 +101,8 @@ export class ArticlesService {
             order: -timestamp,
             title: article.title,
             body: article.body,
-            authorName: user.displayName
+            authorName: user.displayName,
+            authorPhotoURL: user.imageUrl
         };
     }
 }

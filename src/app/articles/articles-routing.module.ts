@@ -8,14 +8,25 @@ import { ArticleEditorComponent } from './article-editor/article-editor.componen
 import { UnsavedChangesGuard } from './article-editor/unsaved-changes-guard.service';
 import { AuthGuard } from './article-editor/auth-guard.service';
 import { ArticleDetailsResolver } from './article-details-resolver.service';
+import { AuthorResolver } from './author-resolver.service';
 
 const articlesRoutes: Routes = [
-    { path: 'articles', component: ArticleListComponent },
+    {
+        path: 'articles',
+        component: ArticleListComponent
+    },
     {
         path: 'article/:id',
         component: ArticleDetailsComponent,
         resolve: {
             article: ArticleDetailsResolver
+        }
+    },
+    {
+        path: 'author-articles/:uid',
+        component: ArticleListComponent,
+        resolve: {
+            author: AuthorResolver
         }
     },
     {
@@ -53,7 +64,8 @@ const articlesRoutes: Routes = [
     providers: [
         UnsavedChangesGuard,
         AuthGuard,
-        ArticleDetailsResolver
+        ArticleDetailsResolver,
+        AuthorResolver
     ]
 })
 export class ArticlesRoutingModule { }
