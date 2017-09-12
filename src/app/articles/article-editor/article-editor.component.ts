@@ -18,7 +18,7 @@ import { User } from '../../shared/models/user.model';
   styleUrls: ['./article-editor.component.css']
 })
 export class ArticleEditorComponent implements OnInit, OnDestroy {
-  private currentUser: User;
+  public currentUser: User | null;
   private currentUserSubscription: Subscription;
 
   public articleForm: FormGroup;
@@ -27,8 +27,8 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
 
   public isSaving = false;
 
-  private articleSlug: string;
-  private articleCreatedAt: number;
+  private articleSlug: string | null;
+  private articleCreatedAt: number | null;
 
   constructor(private articlesService: ArticlesService,
     private accountService: AccountService,
@@ -51,9 +51,10 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
       const article = data.article;
 
       if (article) {
-        if (article.author.uid !== this.currentUser.uid) {
+        if (this.currentUser && article.author.uid !== this.currentUser.uid) {
           this.alertService.error('You can\'t edit article written by someone else.', true, 3000);
           this.router.navigate(['/articles']);
+          return;
         }
 
         this.isNew = false;
@@ -86,9 +87,12 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
   }
 
   async postArticle() {
+    if (!this.currentUser) {
+      return;
+    }
     this.isSaving = true;
     const article = this.prepareArticle();
-    const newPostKey = await this.articlesService.postArticle(article, this.currentUser);
+    const newPostKey = await this.articlesService.postArticle(article, this.currentUser, this.articleSlug, this.articleCreatedAt);
     this.isSaving = false;
 
     // mark the form as "clean" so that CanDeactivate guard is not triggered
@@ -103,18 +107,13 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
     this.router.navigate(['/article/', newPostKey]);
   }
 
-  prepareArticle(): Article {
+  prepareArticle(): {title: string; body: string; } {
     const formModel = this.articleForm.value;
 
-    const saveArticle: Article = new Article();
-
-    saveArticle.slug = this.articleSlug;
-    saveArticle.createdAt = this.articleCreatedAt;
-
-    saveArticle.title = formModel.title;
-    saveArticle.body = formModel.body;
-
-    return saveArticle;
+    return {
+      title: formModel.title,
+      body: formModel.body
+    };
   }
 
   get title() {

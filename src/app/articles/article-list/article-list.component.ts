@@ -19,7 +19,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public articles: Article[];
   public isLoading = false;
 
-  public authorProfile: Profile;
+  public authorProfile: Profile | null;
 
   private routeDataSubscription: Subscription;
 
@@ -30,7 +30,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     this.articles = [];
 
     this.routeDataSubscription = this.route.data.subscribe(async (data: {author: Profile | null}) => {
-      this.authorProfile = data.author || null;
+      this.authorProfile = data.author;
       await this.loadNextBatchOfArticles();
     });
   }

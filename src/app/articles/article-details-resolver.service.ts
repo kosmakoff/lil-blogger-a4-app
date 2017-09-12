@@ -9,12 +9,17 @@ import { ArticlesService } from './articles.service';
 import { AlertService } from '../alert/alert.service';
 
 @Injectable()
-export class ArticleDetailsResolver implements Resolve<Article> {
+export class ArticleDetailsResolver implements Resolve<Article | null> {
     constructor(private articleService: ArticlesService, private alertService: AlertService, private router: Router) {
     }
 
-    async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Article> {
+    async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Article | null> {
         const articleId = route.paramMap.get('id');
+
+        if (!articleId) {
+            throw new Error(`ID parameter was not passed to ArticleDetailsResolver`);
+        }
+
         const article = await this.articleService.getArticle(articleId);
 
         if (article) {

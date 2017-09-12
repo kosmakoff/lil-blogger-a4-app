@@ -14,14 +14,14 @@ import { PromiseUtils } from '../shared/utilities/promiseUtils';
 
 @Injectable()
 export class AccountService {
-    public currentUser: Observable<User>;
+    public currentUser: Observable<User | null>;
 
     constructor(private firebaseService: FirebaseService) {
         this.currentUser = this.firebaseService.currentFbUser
             .map((user) => this.fbUserToUser(user));
     }
 
-    login(): Promise<User> {
+    login(): Promise<User | null> {
         return this.firebaseService.login()
             .map(data => this.fbUserToUser(data.user))
             .toPromise();
@@ -32,7 +32,7 @@ export class AccountService {
             .toPromise();
     }
 
-    async getProfile(uid: string): Promise<Profile> {
+    async getProfile(uid: string): Promise<Profile | null> {
         const fbProfilePromise: firebase.Promise<firebase.database.DataSnapshot> =
             this.firebaseService.database.ref(`users/${uid}`).once('value');
         const profilePromise = PromiseUtils.fbPromiseToPromise(fbProfilePromise);
@@ -42,22 +42,22 @@ export class AccountService {
         return this.fbProfileToProfile(uid, profile);
     }
 
-    private fbUserToUser(fbUser: firebase.UserInfo): User {
+    private fbUserToUser(fbUser: firebase.UserInfo | null): User | null {
         if (fbUser === null) {
             return null;
         }
 
-        const user = new User();
-
-        user.uid = fbUser.uid;
-        user.email = fbUser.email;
-        user.displayName = fbUser.displayName;
-        user.imageUrl = fbUser.photoURL;
+        const user: User = {
+            uid: fbUser.uid,
+            email: fbUser.email,
+            displayName: fbUser.displayName || 'Unidentified user',
+            imageUrl: fbUser.photoURL
+        };
 
         return user;
     }
 
-    private fbProfileToProfile(uid: string, fbProfile: { photoURL: string, displayName: string } | null): Profile {
+    private fbProfileToProfile(uid: string, fbProfile: { photoURL: string, displayName: string } | null): Profile | null {
         if (fbProfile === null) {
             return null;
         }

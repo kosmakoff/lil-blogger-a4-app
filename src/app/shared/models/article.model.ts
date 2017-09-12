@@ -1,15 +1,11 @@
 import { Profile } from './profile.model';
 
-export class Article {
+export interface Article {
   slug: string;
-  title = '';
-  description = '';
-  body = '';
-  tagList: Array<string> = [];
+  title: string;
+  body: string;
   order: number;
   createdAt: number;
-  updatedAt: number;
-  favorited: boolean;
-  favoritesCount: number;
+  updatedAt: number | null;
   author: Profile;
 }

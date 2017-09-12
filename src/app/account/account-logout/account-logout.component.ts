@@ -13,7 +13,7 @@ import { User } from '../../shared/models/user.model';
   styleUrls: ['./account-logout.component.css']
 })
 export class AccountLogoutComponent implements OnInit, OnDestroy {
-  public currentUser: User;
+  public currentUser: User | null;
 
   public isBusy = false;
 

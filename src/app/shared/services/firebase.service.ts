@@ -18,8 +18,8 @@ export class FirebaseService {
     public auth: firebase.auth.Auth;
     public database: firebase.database.Database;
 
-    private currentFbUserSubject: Subject<firebase.UserInfo>;
-    public currentFbUser: Observable<firebase.UserInfo>;
+    private currentFbUserSubject: Subject<firebase.UserInfo | null>;
+    public currentFbUser: Observable<firebase.UserInfo | null>;
 
     constructor() {
         this.app = this.initializeApp();
@@ -28,7 +28,7 @@ export class FirebaseService {
 
         const currentUser = this.auth.currentUser || this.tryFetchUserFromStorage();
 
-        this.currentFbUserSubject = new BehaviorSubject<firebase.UserInfo>(currentUser);
+        this.currentFbUserSubject = new BehaviorSubject<firebase.UserInfo | null>(currentUser);
         this.currentFbUser = this.currentFbUserSubject.asObservable()
             .distinctUntilChanged(this.compareUsers);
 
@@ -45,23 +45,23 @@ export class FirebaseService {
         });
     }
 
-    login(): Observable<any> {
+    login(): Observable<firebase.auth.UserCredential> {
         const googleProvider = new firebase.auth.GoogleAuthProvider();
         googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-        const signInPromise = this.auth.signInWithPopup(googleProvider);
+        const signInPromise: firebase.Promise<firebase.auth.UserCredential> = this.auth.signInWithPopup(googleProvider);
         return Observable.fromPromise(signInPromise);
     }
 
-    logout(): Observable<any> {
+    logout(): Observable<void> {
         return Observable.fromPromise(this.auth.signOut());
     }
 
     private tryFetchUserFromStorage(): firebase.UserInfo | null {
         const keysCount = localStorage.length;
-        let firebaseUserKey: string = null;
+        let firebaseUserKey: string | null = null;
         for (let i = 0; i < keysCount; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith('firebase:authUser')) {
+            if (key && key.startsWith('firebase:authUser')) {
                 firebaseUserKey = key;
             }
         }
@@ -72,6 +72,10 @@ export class FirebaseService {
         }
 
         const userString = localStorage.getItem(firebaseUserKey);
+        if (!userString) {
+            return null;
+        }
+
         const userObject = JSON.parse(userString);
 
         return {
@@ -79,7 +83,8 @@ export class FirebaseService {
             email: userObject.email,
             photoURL: userObject.photoURL,
             providerId: 'google.com',
-            uid: userObject.uid
+            uid: userObject.uid,
+            phoneNumber: null
         };
     }
 

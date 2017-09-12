@@ -1,11 +1,11 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
   <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavBar()">
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand" href="#" (click)="false">Little Blogger</a>
   
   <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed">
-    <ul class="nav navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item" *appAccountSignedin="true">
         <a class="nav-link" routerLink="/editor" (click)="collapseNavBar(); false">New article</a>
       </li>
@@ -16,7 +16,7 @@
         <a class="nav-link" routerLink="/about" (click)="collapseNavBar(); false">About</a>
       </li>
     </ul>
-    <ul class="nav navbar-nav">
+    <ul class="navbar-nav">
       <li *appAccountSignedin="false" class="nav-item">
         <a class="nav-link" href="#" routerLink="/login" (click)="collapseNavBar(); false">Sign In</a>
       </li>

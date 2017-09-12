@@ -1,5 +1,5 @@
 import { Profile } from './profile.model';
 
-export class User extends Profile {
-  public email: string;
+export interface User extends Profile {
+  email: string | null;
 }

@@ -13,7 +13,16 @@ export class AuthorResolver implements Resolve<Profile> {
 
     async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Profile> {
         const uid = route.params.uid;
+        if (!uid) {
+            throw new Error('Author UID was not passed to AuthorResolver');
+        }
+
         const authorProfile = await this.accountService.getProfile(uid);
+
+        if (!authorProfile) {
+            throw new Error(`Could not load author profile by UID=${uid}`);
+        }
+
         return authorProfile;
     }
 }

@@ -2,7 +2,7 @@ export interface Alert {
     type: AlertType;
     message: string;
 
-    timeout?: number;
+    timeout: number | null;
 }
 
 export enum AlertType {

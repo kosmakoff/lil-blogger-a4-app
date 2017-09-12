@@ -1,5 +1,8 @@
 <div>
-  <div *ngIf="!article">Loading...</div>
+  <div *ngIf="!article">
+    <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+    Loading&hellip;
+  </div>
   <div *ngIf="article">
     <h1>{{article.title}}</h1>
     <app-article-date-line [article]="article"></app-article-date-line>

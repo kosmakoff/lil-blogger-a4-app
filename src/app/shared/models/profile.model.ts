@@ -1,5 +1,5 @@
-export class Profile {
+export interface Profile {
   uid: string;
   displayName: string;
-  imageUrl: string;
+  imageUrl: string | null;
 }

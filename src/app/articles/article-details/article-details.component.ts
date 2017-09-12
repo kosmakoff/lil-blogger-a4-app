@@ -16,8 +16,8 @@ import { AccountService } from '../../account/account.service';
   styleUrls: ['./article-details.component.css']
 })
 export class ArticleDetailsComponent implements OnInit, OnDestroy {
-  public article: Article = null;
-  public currentUser: User;
+  public article: Article | null = null;
+  public currentUser: User | null = null;
 
   private currentUserSubscription: Subscription;
   private routeDataSubscription: Subscription;
