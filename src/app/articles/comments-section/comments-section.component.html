@@ -2,7 +2,7 @@
   <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
   Loading&hellip;
 </div>
-<div *ngIf="!isLoading && comments" class="container">
+<div *ngIf="!isLoading && comments !== null && comments.length > 0" class="container">
   <app-comment-details *ngFor="let comment of comments" [comment]="comment"></app-comment-details>
 </div>
 <app-comment-editor *ngIf="currentUser" [article]="article" [user]="currentUser"

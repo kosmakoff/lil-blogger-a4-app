@@ -12,6 +12,6 @@ export class DateLineComponent {
   @Input() profile: Profile;
   @Input() time: {
     createdAt: number;
-    updateAt: number | null;
+    updatedAt: number | null;
   };
 }
