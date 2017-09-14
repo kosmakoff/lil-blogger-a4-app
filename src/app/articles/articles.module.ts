@@ -10,7 +10,10 @@ import { AccountModule } from '../account/account.module';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailsComponent } from './article-details/article-details.component';
 import { ArticleEditorComponent } from './article-editor/article-editor.component';
-import { ArticleDateLineComponent } from './article-date-line/article-date-line.component';
+import { CommentEditorComponent } from './comment-editor/comment-editor.component';
+import { CommentsSectionComponent } from './comments-section/comments-section.component';
+import { CommentDetailsComponent } from './comment-details/comment-details.component';
+import { DateLineComponent } from './date-line/date-line.component';
 
 import { ArticlesService } from './articles.service';
 import { DialogService } from '../shared/services/dialog.service';
@@ -32,7 +35,10 @@ import { TimeSincePipe } from './time-since.pipe';
         ArticleListComponent,
         ArticleDetailsComponent,
         ArticleEditorComponent,
-        ArticleDateLineComponent,
+        DateLineComponent,
+        CommentEditorComponent,
+        CommentsSectionComponent,
+        CommentDetailsComponent,
         MarkdownPipe,
         EllipsisPipe,
         TimeSincePipe

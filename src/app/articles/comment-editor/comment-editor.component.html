@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6 col-md-8">
+      <form (submit)="saveComment($event, box)">
+        <div class="form-group">
+          <label for="message">Add comment</label>
+          <div class="input-group">
+            <input #box placeholder="Message..." id="message" type="text" class="form-control" [disabled]="isSending">
+            <span class="input-group-btn">
+              <button type="submit" class="btn btn-secondary" [disabled]="!box.value || isSending">Send</button>
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

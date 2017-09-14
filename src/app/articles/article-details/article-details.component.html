@@ -5,11 +5,12 @@
   </div>
   <div *ngIf="article">
     <h1>{{article.title}}</h1>
-    <app-article-date-line [article]="article"></app-article-date-line>
+    <app-date-line [time]="article" [profile]="article.author"></app-date-line>
     <div [innerHTML]="article.body | markdown"></div>
     <ng-template [appAccountSignedin]="true" [appAccountSignedinCurrentUser]="article.author">
-      <hr />
       <button class="btn btn-outline-primary btn-sm" [routerLink]="['/editor', article.slug]">Edit</button>
     </ng-template>
+    <hr />
+    <app-comments-section [article]="article"></app-comments-section>
   </div>
 </div>

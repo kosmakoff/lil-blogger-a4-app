@@ -7,8 +7,8 @@ import 'rxjs/add/observable/fromPromise';
 import * as firebase from 'firebase/app';
 
 import { FirebaseService } from '../shared/services/firebase.service';
-import { Article } from '../shared/models/article.model';
-import { Comment } from '../shared/models/comment.model';
+import { Article, FirebaseArticle } from '../shared/models/article.model';
+import { Comment, FirebaseComment } from '../shared/models/comment.model';
 import { Profile } from '../shared/models/profile.model';
 
 import { PromiseUtils } from '../shared/utilities/promiseUtils';
@@ -36,6 +36,7 @@ export class ArticlesService {
             return [];
         }
 
+        // sort by time descending
         return Object.keys(fbArticlesSnapshot)
             .filter(key => fbArticlesSnapshot.hasOwnProperty(key))
             .map(key => this.parseFbArticle(key, fbArticlesSnapshot[key]))
@@ -52,8 +53,8 @@ export class ArticlesService {
     }
 
     async postArticle(
-        article: {title: string; body: string; },
-        user: Profile, slug: string | null, createdAt: number | null): Promise<string> {
+        articleData: {title: string; body: string; },
+        user: Profile, slug: string | null, createdAt: number | null): Promise<Article> {
         let articleKey: string;
         if (slug) {
             articleKey = slug;
@@ -66,14 +67,16 @@ export class ArticlesService {
             }
         }
 
-        const fbArticle = this.createFbArticle(article, user, createdAt);
+        const fbArticle = this.createFbArticle(articleData, user, createdAt);
         const fbSetPromise = this.firebaseService.database.ref(`/articles/${articleKey}`).set(fbArticle);
 
         await PromiseUtils.fbPromiseToPromise(fbSetPromise);
-        return articleKey;
+
+        const article: Article = this.parseFbArticle(articleKey, fbArticle);
+        return article;
     }
 
-    async getComments(limit: number = 10, startAt: number = 0, articleId: string): Promise<Comment[]> {
+    async getComments(articleId: string, limit: number = 10, startAt: number = 0): Promise<Comment[]> {
         const ref = `article-comments/${articleId}`;
         let query: firebase.database.Query = this.firebaseService.database.ref(ref).orderByChild('order');
 
@@ -91,16 +94,18 @@ export class ArticlesService {
             return [];
         }
 
+        // sort by time ascending
         return Object.keys(fbCommentsSnapshot)
             .filter(key => fbCommentsSnapshot.hasOwnProperty(key))
-            .map(key => this.parseFbComment(key, fbCommentsSnapshot[key]))
-            .sort((a, b) => b.createdAt - a.createdAt);
+            .map(key => this.parseFbComment(articleId, key, fbCommentsSnapshot[key]))
+            .sort((a, b) => a.createdAt - b.createdAt);
     }
 
-    async postComment(article: Article, user: Profile, comment: Comment): Promise<string> {
+    async postComment(article: Article, user: Profile,
+        commentData: {slug: string; text: string; }, createdAt: number | null): Promise<Comment> {
         let commentKey: string;
-        if (comment.slug) {
-            commentKey = comment.slug;
+        if (commentData.slug) {
+            commentKey = commentData.slug;
         } else {
             const newRef = this.firebaseService.database.ref().child(`article-comments/${article.slug}`).push();
             if (newRef.key) {
@@ -110,28 +115,30 @@ export class ArticlesService {
             }
         }
 
-        const fbComment = this.createFbComment(article, user, comment);
+        const fbComment = this.createFbComment(user, commentData.text, createdAt);
         const fbSetPromise = this.firebaseService.database.ref(`article-comments/${article.slug}/${commentKey}`).set(fbComment);
 
         await PromiseUtils.fbPromiseToPromise(fbSetPromise);
-        return commentKey;
+
+        const comment: Comment = this.parseFbComment(article.slug, commentKey, fbComment);
+        return comment;
     }
 
-    private createFbArticle(article: {title: string; body: string; }, user: Profile, createdAt: number | null): any {
+    private createFbArticle(article: {title: string; body: string; }, user: Profile, createdAt: number | null): FirebaseArticle {
         const timestamp = Date.now();
         return {
             uid: user.uid,
-            createdAt: createdAt || timestamp,
-            updatedAt: timestamp,
-            order: -timestamp,
+            authorName: user.displayName,
+            authorPhotoURL: user.imageUrl,
             title: article.title,
             body: article.body,
-            authorName: user.displayName,
-            authorPhotoURL: user.imageUrl
+            createdAt: createdAt || timestamp,
+            updatedAt: timestamp,
+            order: -timestamp
         };
     }
 
-    private parseFbArticle(slug: string, fbArticle: any): Article {
+    private parseFbArticle(slug: string, fbArticle: FirebaseArticle): Article {
         const authorProfile: Profile = {
             uid: fbArticle.uid,
             displayName: fbArticle.authorName,
@@ -140,33 +147,48 @@ export class ArticlesService {
 
         const article: Article = {
             slug: slug,
+            author: authorProfile,
             title: fbArticle.title,
             body: fbArticle.body,
             createdAt: fbArticle.createdAt,
             updatedAt: fbArticle.updatedAt,
-            order: fbArticle.order,
-            author: authorProfile
+            order: fbArticle.order
         };
 
         return article;
     }
 
-    private createFbComment(article: Article, user: Profile, comment: Comment): any {
+    private createFbComment(user: Profile, commentText: string, createdAt: number | null): FirebaseComment {
         const timestamp = Date.now();
-        throw new Error();
-        /*
-        return {
 
+        return {
+            uid: user.uid,
+            authorName: user.displayName,
+            authorPhotoURL: user.imageUrl,
+            text: commentText,
+            createdAt: createdAt || timestamp,
+            updatedAt: timestamp,
+            order: timestamp
         };
-        */
     }
 
-    private parseFbComment(slug: string, fbComment: any): Comment {
-        const comment = new Comment();
+    private parseFbComment(articleSlug: string, slug: string, fbComment: FirebaseComment): Comment {
+        const authorProfile: Profile = {
+            uid: fbComment.uid,
+            displayName: fbComment.authorName,
+            imageUrl: fbComment.authorPhotoURL
+        };
 
-        throw new Error();
-        // TODO: implement field setting
+        const comment: Comment = {
+            articleSlug: articleSlug,
+            slug: slug,
+            author: authorProfile,
+            text: fbComment.text,
+            createdAt: fbComment.createdAt,
+            updatedAt: fbComment.updatedAt,
+            order: fbComment.order
+        };
 
-        // return comment;
+        return comment;
     }
 }

@@ -2,11 +2,15 @@
   <div *ngIf="!isLoading && (!articles || !articles.length)" class="text-center">
     No articles yet. Feel free to <a routerLink="/editor">add one</a>.
   </div>
+  <div *ngIf="isLoading && (!articles || !articles.length)" class="text-center">
+    <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+    Loading&hellip;
+  </div>
   <div *ngFor="let article of articles; index as i">
     <div (click)="viewArticle(article)">
       <h4>{{article.title}}</h4>
       <div [innerHTML]="article.body | ellipsis:100 | markdown"></div>
-      <app-article-date-line [article]="article"></app-article-date-line>
+      <app-date-line [time]="article" [profile]="article.author"></app-date-line>
     </div>
     <hr *ngIf="i+1 < articles.length"/>
   </div>

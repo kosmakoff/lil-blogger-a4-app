@@ -1,0 +1,8 @@
+<p>
+    <small>
+        <em>{{ time.createdAt | timeSince }}</em> by <img [src]="profile.imageUrl" width="24" height="24" class="rounded-circle"><em>{{ profile.displayName }}</em>
+        <ng-template [ngIf]="time.updatedAt && time.updatedAt !== time.createdAt">
+            (updated <em>{{ time.updatedAt | timeSince }}</em>)
+        </ng-template>
+    </small>
+</p>

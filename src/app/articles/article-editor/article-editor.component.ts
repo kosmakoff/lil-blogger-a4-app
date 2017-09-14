@@ -92,7 +92,7 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
     }
     this.isSaving = true;
     const article = this.prepareArticle();
-    const newPostKey = await this.articlesService.postArticle(article, this.currentUser, this.articleSlug, this.articleCreatedAt);
+    const newPost = await this.articlesService.postArticle(article, this.currentUser, this.articleSlug, this.articleCreatedAt);
     this.isSaving = false;
 
     // mark the form as "clean" so that CanDeactivate guard is not triggered
@@ -104,7 +104,7 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
       this.alertService.info(`Article '${article.title}' was updated.`, true, 1500);
     }
 
-    this.router.navigate(['/article/', newPostKey]);
+    this.router.navigate(['/article/', newPost.slug]);
   }
 
   prepareArticle(): {title: string; body: string; } {

@@ -4,7 +4,7 @@ import * as moment from 'moment';
 
 @Pipe({
     name: 'timeSince',
-    pure: true
+    pure: false
 })
 export class TimeSincePipe implements PipeTransform {
     transform(value: number): string {
