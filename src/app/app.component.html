@@ -1,6 +1,11 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <app-nav></app-nav>
-<div class="container">
+<div class="container" (pointerdown)="onPointerDown($event)">
+    <div class="fadeMe" *ngIf="isLoading">
+    <div class="loader">
+      <i class="fa fa-circle-o-notch fa-spin fa-fw fa-10x"></i>
+    </div>
+  </div>
   <app-alert></app-alert>
   <router-outlet></router-outlet>
 </div>
