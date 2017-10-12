@@ -1,0 +1,19 @@
+// Angular
+import '@angular/platform-browser';
+import '@angular/core';
+import '@angular/common';
+import '@angular/http';
+import '@angular/router';
+import '@angular/forms';
+
+// RxJS
+import 'rxjs/Subscription';
+import 'rxjs/Observable';
+import 'rxjs/Subject';
+import 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/fromPromise';
+import 'rxjs/add/operator/do';

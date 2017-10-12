@@ -1,5 +1,6 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common');
+const helpers = require('./helpers');
 const { AotPlugin } = require('@ngtools/webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
@@ -12,8 +13,9 @@ module.exports = merge(common, {
               "environments/environment.ts": "environments/environment.ts"
             },
             "exclude": [],
-            "tsConfigPath": "src/tsconfig.app.json",
-            "skipCodeGeneration": true
+            "tsConfigPath": "tsconfig.aot.json",
+            "skipCodeGeneration": true,
+            "entryModule": helpers.root('src/app/app.module#AppModule')
           }),
         new UglifyJSPlugin({
             beautify: false,

@@ -1,0 +1,36 @@
+[debug] [2017-10-12T10:19:04.065Z] ----------------------------------------------------------------------
+[debug] [2017-10-12T10:19:04.068Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\olegk\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2017-10-12T10:19:04.068Z] CLI Version:   3.10.1
+[debug] [2017-10-12T10:19:04.068Z] Platform:      win32
+[debug] [2017-10-12T10:19:04.068Z] Node Version:  v6.10.2
+[debug] [2017-10-12T10:19:04.070Z] Time:          Thu Oct 12 2017 12:19:04 GMT+0200 (Central European Daylight Time)
+[debug] [2017-10-12T10:19:04.070Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-10-12T10:19:04.092Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-10-12T10:19:04.092Z] > authorizing via signed-in user
+[debug] [2017-10-12T10:19:04.094Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-10-12T10:19:04.094Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/zHbeKaV5E_DrT-QAFvJ5bkpBHgCS_0O9vxd9Pne2pgo',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Thu Oct 12 2017 12:19:04 GMT+0200 (Central European Daylight Time)
+[debug] [2017-10-12T10:19:04.406Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-12T10:19:04.413Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/lil-blogger  
+ Thu Oct 12 2017 12:19:04 GMT+0200 (Central European Daylight Time)
+[debug] [2017-10-12T10:19:05.717Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-12T10:19:05.717Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/lil-blogger/tokens  
+ Thu Oct 12 2017 12:19:05 GMT+0200 (Central European Daylight Time)
+[debug] [2017-10-12T10:19:06.425Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Dev\personal\lil-blogger-a4-app'...
+[info] 
+[debug] [2017-10-12T10:19:06.429Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/lil-blogger  
+ Thu Oct 12 2017 12:19:06 GMT+0200 (Central European Daylight Time)
+[debug] [2017-10-12T10:19:07.265Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-12T10:19:07.265Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/895400372846/clients/_:getWebAppConfig  
+ Thu Oct 12 2017 12:19:07 GMT+0200 (Central European Daylight Time)
+[debug] [2017-10-12T10:19:07.864Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: dist
+[info] +  hosting: Local server: http://localhost:5000
+
