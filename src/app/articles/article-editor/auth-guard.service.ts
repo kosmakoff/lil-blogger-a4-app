@@ -2,8 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/do';
+import { take, tap, map } from 'rxjs/operators';
 
 import { ArticleEditorComponent } from './article-editor.component';
 
@@ -15,13 +14,15 @@ export class AuthGuard implements CanActivate {
     constructor(private accountService: AccountService, private alertService: AlertService, private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        return this.accountService.currentUser.take(1)
-            .do(user => {
+        return this.accountService.currentUser.pipe(
+            take(1),
+            tap(user => {
                 if (!user) {
                     this.alertService.error('You should sign in to do that', true, 3000);
                     this.router.navigate(['/articles']);
                 }
-            })
-            .map(user => !!user);
+            }),
+            map(user => !!user)
+        );
     }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 
 import * as firebase from 'firebase/app';
@@ -10,8 +9,6 @@ import { FirebaseService } from '../shared/services/firebase.service';
 import { Article, FirebaseArticle } from '../shared/models/article.model';
 import { Comment, FirebaseComment } from '../shared/models/comment.model';
 import { Profile } from '../shared/models/profile.model';
-
-import { PromiseUtils } from '../shared/utilities/promiseUtils';
 
 @Injectable()
 export class ArticlesService {
@@ -28,8 +25,7 @@ export class ArticlesService {
 
         query = query.limitToFirst(limit);
 
-        const valuesPromise: firebase.Promise<firebase.database.DataSnapshot> = query.once('value');
-        const fbArticles = await PromiseUtils.fbPromiseToPromise(valuesPromise);
+        const fbArticles: firebase.database.DataSnapshot = await query.once('value');
         const fbArticlesSnapshot = fbArticles.val();
 
         if (!fbArticlesSnapshot) {
@@ -44,9 +40,9 @@ export class ArticlesService {
     }
 
     async getArticle(articleId: string): Promise<Article> {
-        const fbArticleDataPromise: firebase.Promise<firebase.database.DataSnapshot> =
+        const fbArticleDataPromise: Promise<firebase.database.DataSnapshot> =
             this.firebaseService.database.ref(`articles/${articleId}`).once('value');
-        const fbArticleSnapshot = await PromiseUtils.fbPromiseToPromise(fbArticleDataPromise);
+        const fbArticleSnapshot = await fbArticleDataPromise;
         const fbArticleData = fbArticleSnapshot.val();
 
         return this.parseFbArticle(articleId, fbArticleData);
@@ -68,9 +64,7 @@ export class ArticlesService {
         }
 
         const fbArticle = this.createFbArticle(articleData, user, createdAt);
-        const fbSetPromise = this.firebaseService.database.ref(`/articles/${articleKey}`).set(fbArticle);
-
-        await PromiseUtils.fbPromiseToPromise(fbSetPromise);
+        await this.firebaseService.database.ref(`/articles/${articleKey}`).set(fbArticle);
 
         const article: Article = this.parseFbArticle(articleKey, fbArticle);
         return article;
@@ -86,8 +80,7 @@ export class ArticlesService {
 
         query = query.limitToFirst(limit);
 
-        const valuesPromise: firebase.Promise<firebase.database.DataSnapshot> = query.once('value');
-        const fbComments = await PromiseUtils.fbPromiseToPromise(valuesPromise);
+        const fbComments: firebase.database.DataSnapshot = await query.once('value');
         const fbCommentsSnapshot = fbComments.val();
 
         if (!fbCommentsSnapshot) {
@@ -116,9 +109,7 @@ export class ArticlesService {
         }
 
         const fbComment = this.createFbComment(user, commentData.text, createdAt);
-        const fbSetPromise = this.firebaseService.database.ref(`article-comments/${article.slug}/${commentKey}`).set(fbComment);
-
-        await PromiseUtils.fbPromiseToPromise(fbSetPromise);
+        await this.firebaseService.database.ref(`article-comments/${article.slug}/${commentKey}`).set(fbComment);
 
         const comment: Comment = this.parseFbComment(article.slug, commentKey, fbComment);
         return comment;

@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { distinctUntilChanged } from 'rxjs/operators';
 import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
@@ -29,8 +28,9 @@ export class FirebaseService {
         const currentUser = this.auth.currentUser || this.tryFetchUserFromStorage();
 
         this.currentFbUserSubject = new BehaviorSubject<firebase.UserInfo | null>(currentUser);
-        this.currentFbUser = this.currentFbUserSubject.asObservable()
-            .distinctUntilChanged(this.compareUsers);
+        this.currentFbUser = this.currentFbUserSubject.asObservable().pipe(
+            distinctUntilChanged(this.compareUsers)
+        );
 
         this.auth.onAuthStateChanged((user: firebase.User) => {
             this.currentFbUserSubject.next(user);
@@ -48,7 +48,7 @@ export class FirebaseService {
     login(): Observable<firebase.auth.UserCredential> {
         const googleProvider = new firebase.auth.GoogleAuthProvider();
         googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-        const signInPromise: firebase.Promise<firebase.auth.UserCredential> = this.auth.signInWithPopup(googleProvider);
+        const signInPromise: Promise<firebase.auth.UserCredential> = this.auth.signInWithPopup(googleProvider);
         return Observable.fromPromise(signInPromise);
     }
 
