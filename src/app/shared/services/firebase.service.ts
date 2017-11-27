@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -10,6 +10,7 @@ import 'firebase/auth';
 import 'firebase/database';
 
 import { User } from '../models/user.model';
+import { LOCAL_STORAGE } from '../../local-storage';
 
 @Injectable()
 export class FirebaseService {
@@ -20,7 +21,7 @@ export class FirebaseService {
     private currentFbUserSubject: Subject<firebase.UserInfo | null>;
     public currentFbUser: Observable<firebase.UserInfo | null>;
 
-    constructor() {
+    constructor(@Inject(LOCAL_STORAGE) private localStorage: Storage) {
         this.app = this.initializeApp();
         this.auth = this.app.auth();
         this.database = this.app.database();
@@ -57,10 +58,10 @@ export class FirebaseService {
     }
 
     private tryFetchUserFromStorage(): firebase.UserInfo | null {
-        const keysCount = localStorage.length;
+        const keysCount = this.localStorage.length;
         let firebaseUserKey: string | null = null;
         for (let i = 0; i < keysCount; i++) {
-            const key = localStorage.key(i);
+            const key = this.localStorage.key(i);
             if (key && key.startsWith('firebase:authUser')) {
                 firebaseUserKey = key;
             }
@@ -71,7 +72,7 @@ export class FirebaseService {
             return null;
         }
 
-        const userString = localStorage.getItem(firebaseUserKey);
+        const userString = this.localStorage.getItem(firebaseUserKey);
         if (!userString) {
             return null;
         }

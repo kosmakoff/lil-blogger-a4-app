@@ -3,7 +3,8 @@
     "search.exclude": {
         "**/node_modules": true,
         "**/bower_components": true,
-        "dist": true
+        "dist": true,
+        "out-tsc": true
     },
     "files.exclude": {
         "**/.git": true,

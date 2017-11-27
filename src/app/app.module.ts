@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, PLATFORM_ID, APP_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -15,6 +16,7 @@ import { NavComponent } from './nav/nav.component';
 import { FooterComponent } from './footer/footer.component';
 import { AboutComponent } from './about/about.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LOCAL_STORAGE } from './local-storage';
 
 @NgModule({
   declarations: [
@@ -27,12 +29,30 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
   imports: [
     NgbModule.forRoot(),
     AlertModule,
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'lil-blogger-a4-app' }),
     FormsModule,
     AccountModule,
     ArticlesModule,
     AppRoutingModule
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [
+    {
+      provide: LOCAL_STORAGE,
+      // useValue: window.localStorage,
+      useFactory: () => {
+        console.log('Requested real window.localStorage');
+        return window.localStorage;
+      }
+    }
+  ]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(APP_ID) private appId: string
+  ) {
+    const platform = isPlatformBrowser(platformId) ? 'in the browser' : 'on the server';
+    console.log(`Running ${platform} with appId=${appId}`);
+  }
+}
