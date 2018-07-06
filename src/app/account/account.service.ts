@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import 'rxjs/add/operator/toPromise';
+
 
 import { User } from '../shared/models/user.model';
 import { Profile } from '../shared/models/profile.model';

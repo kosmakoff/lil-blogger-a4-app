@@ -1,9 +1,8 @@
+
+import { from as observableFrom, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { distinctUntilChanged } from 'rxjs/operators';
-import 'rxjs/add/observable/fromPromise';
+
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
@@ -32,7 +31,7 @@ export class FirebaseService {
             distinctUntilChanged(this.compareUsers)
         );
 
-        this.auth.onAuthStateChanged((user: firebase.User) => {
+        this.auth.onAuthStateChanged((user: firebase.User | null) => {
             this.currentFbUserSubject.next(user);
         });
     }
@@ -49,11 +48,11 @@ export class FirebaseService {
         const googleProvider = new firebase.auth.GoogleAuthProvider();
         googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
         const signInPromise: Promise<firebase.auth.UserCredential> = this.auth.signInWithPopup(googleProvider);
-        return Observable.fromPromise(signInPromise);
+        return observableFrom(signInPromise);
     }
 
     logout(): Observable<void> {
-        return Observable.fromPromise(this.auth.signOut());
+        return observableFrom(this.auth.signOut());
     }
 
     private tryFetchUserFromStorage(): firebase.UserInfo | null {

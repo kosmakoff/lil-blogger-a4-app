@@ -17,5 +17,5 @@ export interface FirebaseComment {
     updatedAt: number | null;
     uid: string;
     authorName: string;
-    authorPhotoURL: string;
+    authorPhotoURL: string | null;
 }

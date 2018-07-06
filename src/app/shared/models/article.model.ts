@@ -18,5 +18,5 @@ export interface FirebaseArticle {
   updatedAt: number | null;
   uid: string;
   authorName: string;
-  authorPhotoURL: string;
+  authorPhotoURL: string | null;
 }

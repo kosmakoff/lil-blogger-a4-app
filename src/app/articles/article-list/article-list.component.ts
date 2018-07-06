@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { ArticlesService } from '../articles.service';
 
@@ -29,8 +29,8 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.articles = [];
 
-    this.routeDataSubscription = this.route.data.subscribe(async (data: {author: Profile | null}) => {
-      this.authorProfile = data.author;
+    this.routeDataSubscription = this.route.data.subscribe(async (data) => {
+      this.authorProfile = data.author as Profile | null;
       await this.loadNextBatchOfArticles();
     });
   }

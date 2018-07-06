@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Article } from '../../shared/models/article.model';
 import { User } from '../../shared/models/user.model';
@@ -31,8 +31,8 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
       this.currentUser = user;
     });
 
-    this.routeDataSubscription = this.route.data.subscribe((data: { article: Article }) => {
-      this.article = data.article;
+    this.routeDataSubscription = this.route.data.subscribe(data => {
+      this.article = data.article as Article;
     });
   }
 

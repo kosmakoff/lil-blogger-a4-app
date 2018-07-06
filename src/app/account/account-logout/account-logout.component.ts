@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { AccountService } from '../account.service';
 import { AlertService } from '../../alert/alert.service';
@@ -28,7 +28,9 @@ export class AccountLogoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentUserSubscription.unsubscribe();
+    if (this.currentUserSubscription != null) {
+      this.currentUserSubscription.unsubscribe();
+    }
   }
 
   async logout() {

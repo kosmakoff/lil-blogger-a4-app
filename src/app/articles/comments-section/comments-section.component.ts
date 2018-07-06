@@ -7,7 +7,7 @@ import { User } from '../../shared/models/user.model';
 import { ArticlesService } from '../articles.service';
 import { AccountService } from '../../account/account.service';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comments-section',

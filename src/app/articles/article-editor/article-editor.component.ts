@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, NgZone, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { ArticlesService } from '../articles.service';
 import { AccountService } from '../../account/account.service';
@@ -47,8 +47,8 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.route.data.subscribe((data: { article: Article }) => {
-      const article = data.article;
+    this.route.data.subscribe(data => {
+      const article = data.article as Article;
 
       if (article) {
         if (this.currentUser && article.author.uid !== this.currentUser.uid) {

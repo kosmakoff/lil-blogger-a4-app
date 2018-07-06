@@ -29,9 +29,7 @@ export class CommentEditorComponent implements OnInit {
     this.isSending = true;
     const commentText = el.value;
 
-    const newComment = await this.articlesService.postComment(this.article, this.user, {
-      slug: null, text: commentText
-    }, null);
+    const newComment = await this.articlesService.postComment(this.article, this.user, commentText);
 
     this.isSending = false;
 

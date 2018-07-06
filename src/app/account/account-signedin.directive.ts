@@ -1,6 +1,6 @@
 import { Directive, Input, OnInit, OnDestroy, TemplateRef, ViewContainerRef, SimpleChanges } from '@angular/core';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { AccountService } from './account.service';
 import { User } from '../shared/models/user.model';
@@ -9,7 +9,7 @@ import { User } from '../shared/models/user.model';
   selector: '[appAccountSignedin]'
 })
 export class AccountSignedinDirective implements OnInit, OnDestroy {
-  private condition: boolean;
+  private condition = false;
   private currentUser: { uid: string };
 
   private currentUserSubscription: Subscription;

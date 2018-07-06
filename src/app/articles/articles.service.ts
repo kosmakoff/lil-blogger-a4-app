@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import { Observable } from 'rxjs';
+
 
 import * as firebase from 'firebase/app';
 
@@ -94,21 +94,16 @@ export class ArticlesService {
             .sort((a, b) => a.createdAt - b.createdAt);
     }
 
-    async postComment(article: Article, user: Profile,
-        commentData: {slug: string; text: string; }, createdAt: number | null): Promise<Comment> {
+    async postComment(article: Article, user: Profile, commentText: string): Promise<Comment> {
         let commentKey: string;
-        if (commentData.slug) {
-            commentKey = commentData.slug;
+        const newRef = this.firebaseService.database.ref().child(`article-comments/${article.slug}`).push();
+        if (newRef.key) {
+            commentKey = newRef.key;
         } else {
-            const newRef = this.firebaseService.database.ref().child(`article-comments/${article.slug}`).push();
-            if (newRef.key) {
-                commentKey = newRef.key;
-            } else {
-                throw new Error('New comment Key could not be generated');
-            }
+            throw new Error('New comment Key could not be generated');
         }
 
-        const fbComment = this.createFbComment(user, commentData.text, createdAt);
+        const fbComment = this.createFbComment(user, commentText);
         await this.firebaseService.database.ref(`article-comments/${article.slug}/${commentKey}`).set(fbComment);
 
         const comment: Comment = this.parseFbComment(article.slug, commentKey, fbComment);
@@ -149,7 +144,7 @@ export class ArticlesService {
         return article;
     }
 
-    private createFbComment(user: Profile, commentText: string, createdAt: number | null): FirebaseComment {
+    private createFbComment(user: Profile, commentText: string): FirebaseComment {
         const timestamp = Date.now();
 
         return {
@@ -157,7 +152,7 @@ export class ArticlesService {
             authorName: user.displayName,
             authorPhotoURL: user.imageUrl,
             text: commentText,
-            createdAt: createdAt || timestamp,
+            createdAt: timestamp,
             updatedAt: timestamp,
             order: timestamp
         };
