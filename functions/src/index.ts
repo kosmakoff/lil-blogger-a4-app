@@ -1,42 +1,46 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 import * as functions from 'firebase-functions';
-import { DeltaSnapshot } from 'firebase-functions/lib/providers/database';
-import { Event } from 'firebase-functions';
+import { DataSnapshot } from 'firebase-functions/lib/providers/database';
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 import * as admin from 'firebase-admin';
-admin.initializeApp(functions.config().firebase);
+import { EventContext } from 'firebase-functions';
+import { getHeapSpaceStatistics } from 'v8';
 
-const createUpdateArticleHandler = (event: Event<DeltaSnapshot>) => {
-    const articleId = event.params.pushId;
-    const userId = event.data.val().uid;
+function getApp() {
+    const appOptions = JSON.parse(process.env.FIREBASE_CONFIG);
+    const app = admin.initializeApp(appOptions);
+    return app;
+}
 
-    const data = event.data.val();
-
-    return admin.database().ref(`user-articles/${userId}/${articleId}`).set(data);
-};
-
-exports.onAddArticle = functions.database.ref('/articles/{pushId}').onCreate(createUpdateArticleHandler);
-exports.onUpdateArticle = functions.database.ref('/articles/{pushId}').onUpdate(createUpdateArticleHandler);
-
-exports.onDeleteArticle = functions.database.ref('/articles/{pushId}').onDelete(event => {
-    const articleId = event.params.pushId;
-    const userId = event.data.previous.val().uid;
-
-    return admin.database().ref(`user-articles/${userId}/${articleId}`).remove();
+exports.onAddArticle = functions.database.ref('/articles/{pushId}').onCreate((snapshot, context) => {
+    const articleId = context.params.pushId;
+    const data = snapshot.val();
+    const userId = data.uid;
+    return getApp().database().ref(`user-articles/${userId}/${articleId}`).set(data);
 });
 
-exports.onUserAccountCreated = functions.auth.user().onCreate(event => {
-    const userRecord = event.data;
+exports.onUpdateArticle = functions.database.ref('/articles/{pushId}').onUpdate((change, context) => {
+    const articleId = context.params.pushId;
+    const data = change.after.val();
+    const userId = data.uid;
+    return getApp().database().ref(`user-articles/${userId}/${articleId}`).set(data);
+});
 
-    return admin.database().ref(`users/${userRecord.uid}`).set({
-        displayName: userRecord.displayName,
-        photoURL: userRecord.photoURL
+exports.onDeleteArticle = functions.database.ref('/articles/{pushId}').onDelete((snapshot, context) => {
+    const articleId = context.params.pushId;
+    const userId = snapshot.val().uid;
+
+    return getApp().database().ref(`user-articles/${userId}/${articleId}`).remove();
+});
+
+exports.onUserAccountCreated = functions.auth.user().onCreate((user, context) => {
+    return getApp().database().ref(`users/${user.uid}`).set({
+        displayName: user.displayName,
+        photoURL: user.photoURL
     });
 });
 
-exports.onUserAccountCreated = functions.auth.user().onDelete(event => {
-    const userRecord = event.data;
-
-    return admin.database().ref(`users/${userRecord.uid}`).remove();
+exports.onUserAccountDeleted = functions.auth.user().onDelete((user, context) => {
+    return getApp().database().ref(`users/${user.uid}`).remove();
 });

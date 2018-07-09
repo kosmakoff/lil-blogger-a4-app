@@ -5,11 +5,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "firebase-admin": "^5.1.0",
-    "firebase-functions": "^0.6.1"
+    "firebase-admin": "^5.12.1",
+    "firebase-functions": "^1.1.0"
   },
   "private": true,
   "devDependencies": {
-    "typescript": "^2.4.2"
+    "typescript": "^2.7.2"
   }
 }

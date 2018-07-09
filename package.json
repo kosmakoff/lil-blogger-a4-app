@@ -16,7 +16,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:site": "ng build --env=prod --prod",
+    "build:site": "ng build --prod",
     "deploy:site": "npm run build:site && firebase deploy --only hosting",
     "build:functions": "npm run --prefix functions build",
     "deploy:functions": "npm run build:functions && firebase deploy --only functions",
