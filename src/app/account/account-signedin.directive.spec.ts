@@ -1,8 +1,14 @@
 import { AccountSignedinDirective } from './account-signedin.directive';
+import { TestBed, inject } from '@angular/core/testing';
 
 describe('AccountSignedinDirective', () => {
-  it('should create an instance', () => {
-    const directive = new AccountSignedinDirective();
-    expect(directive).toBeTruthy();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [AccountSignedinDirective]
+    });
   });
+
+  it('should create an instance', inject([AccountSignedinDirective], (directive: AccountSignedinDirective) => {
+    expect(directive).toBeTruthy();
+  }));
 });
